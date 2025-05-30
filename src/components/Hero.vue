@@ -2,10 +2,6 @@
 import { RouterLink } from 'vue-router'
 import { Typed } from '@duskmoon/vue3-typed-js';
 
-
-
-
-
 const props = defineProps({
     image: {
         type: String,

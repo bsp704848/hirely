@@ -6,6 +6,7 @@ import defaultImage from '../assets/icons/default.png'
 import JobSearch from '../components/JobSearch.vue'
 import JobFilter from '../components/JobFilter.vue'
 import { useAuthStore } from '../stores/authStore'
+import Pagination from '../components/Pagination.vue'
 
 
 const props = defineProps({
@@ -19,6 +20,8 @@ const router = useRouter()
 const apiJobs = ref([])
 const localJobs = ref([]) 
 const searchQuery = ref('')
+const currentPage = ref(1)
+const itemsPerPage = ref(6)
 const isFiltering = ref(false)
 
 const selectedSalaryRange = ref(0) 
@@ -125,6 +128,21 @@ function handleSalaryFilter(value) {
 function handleExperienceFilter(value) {
     selectedExperience.value = value;
 
+} 
+
+
+const totalPages = computed(() => {
+    return Math.ceil(filteredJobs.value.length / itemsPerPage.value)
+})
+
+const paginatedJobs = computed(() => {
+    const start = (currentPage.value - 1) * itemsPerPage.value
+    const end = start + itemsPerPage.value
+    return filteredJobs.value.slice(start, end)
+}) 
+
+function onPageChange(newPage) {
+    currentPage.value = newPage
 }
 
 
@@ -159,7 +177,7 @@ function handleExperienceFilter(value) {
                     </div>
                 </template>
                 <template v-else>
-                    <template v-for="job in filteredJobs" :key="job.id">
+                    <template v-for="job in paginatedJobs" :key="job.id">
                         <JobCard v-if="job.id" :title="job.title" :id="job.id" :image="defaultImage">
                             <p class="text-sm font-bold text-gray-500">
                                 <i class="pi pi-map-marker" style="font-size: 1rem"></i>
@@ -185,6 +203,8 @@ function handleExperienceFilter(value) {
             </template>
         </div>
     </div>
+    <Pagination v-if="!isFiltering && filteredJobs.length > itemsPerPage" :currentPage="currentPage"
+        :totalPages="totalPages" @page-changed="onPageChange" />
 </template> 
 
 

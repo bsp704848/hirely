@@ -22,7 +22,7 @@ function handleFindMoreJobs() {
     <Hero :image="HomeImage" />
     <JobCards />
     <Carousel />
-    <JobList :limit="4" :showFilter="false" />
+    <JobList :limit="3" :showFilter="false" />
 
     <div class="text-center my-6">
       <button @click="handleFindMoreJobs"
