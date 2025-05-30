@@ -39,15 +39,26 @@ router.beforeEach((to, from, next) => {
   const isLoggedIn = authStore.isLoggedIn
   const role = authStore.role
 
+
   if (to.meta.requiresAuth && !isLoggedIn) {
     return next('/login')
   }
 
+  if ((to.path === '/login' || to.path === '/register') && isLoggedIn) {
+    if (role === 'employer') {
+      return next('/employer') 
+    } else {
+      return next('/') 
+    }
+  }
+
+ 
   if (to.meta.role && to.meta.role !== role) {
     return next('/')
   }
 
   next()
-}) 
+})
+
 
 export default router

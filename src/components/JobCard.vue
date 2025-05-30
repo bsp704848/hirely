@@ -8,8 +8,9 @@ defineProps({
 </script>
 
 <template>
-    <div class="flex flex-col space-y-2 px-4 py-3 border rounded-xl p-5 shadow-lg hover:shadow-2xl hover:scale-[1.02] transform transition-transform
-     ease-in-out bg-white dark:bg-gray-900 dark:text-white">
+    <div
+        class="w-full max-w-[300px] flex flex-col space-y-2 px-4 py-3 border rounded-xl p-5 shadow-lg hover:shadow-2xl hover:scale-[1.02] transform transition-transform ease-in-out bg-white dark:bg-gray-900 dark:text-white">
+
 
 
         <div class="flex items-center space-x-2">

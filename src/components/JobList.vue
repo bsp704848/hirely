@@ -75,11 +75,14 @@ const filteredJobs = computed(() => {
     const selectedExperienceVal = selectedExperience.value;
 
     return allJobs.value.filter((job) => {
-        console.log("jobs",job)
+
+        const jobId = job.id?.toString().toLowerCase();
+        
         const matchesSearch =
             job.title.toLowerCase().includes(query) ||
             job.location?.toLowerCase().includes(query) ||
-            job.company?.name?.toLowerCase().includes(query);
+            job.company?.name?.toLowerCase().includes(query) ||
+            (jobId && jobId.includes(query));
 
         const matchesSalary = !selectedSalaryVal ||
             job.salary.replace(/\s|,/g, '') === selectedSalaryVal.replace(/\s|,/g, '');
@@ -138,14 +141,13 @@ function handleExperienceFilter(value) {
                 <JobSearch v-model="searchQuery" />
             </div>
 
-            <div class="w-full md:w-1/3 flex justify-end">
+            <div class="w-full md:w-1/3 flex">
                 <JobFilter v-model:salaryRange="selectedSalaryRange" @update:salaryFilter="handleSalaryFilter"
                     v-model:experienceFilter="selectedExperience" @update:experienceFilter="handleExperienceFilter" />
             </div>
         </div>
 
-        <div class="w-full max-w-6xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-            :class="{ 'min-h-[400px]': isFiltering }">
+        <div class="w-full max-w-6xl grid gap-10 auto-grid justify-center" :class="{ 'min-h-[400px]': isFiltering }">
             <div v-if="isFiltering" class="w-full col-span-full flex justify-center items-center py-10">
                 <div class="loader mt-4"></div>
             </div>
@@ -195,6 +197,13 @@ function handleExperienceFilter(value) {
     height: 32px;
     animation: spin 1s linear infinite;
     margin: auto;
+}
+
+.auto-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    justify-content: center;
+    gap: 2rem;
 }
 
 @keyframes spin {
