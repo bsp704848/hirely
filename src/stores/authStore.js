@@ -1,38 +1,43 @@
+import axios from 'axios'
 import { defineStore } from 'pinia'
+const baseURL = import.meta.env.VITE_API_BASE_URL;
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    users: JSON.parse(localStorage.getItem('users')) || [],
-    currentUser: JSON.parse(localStorage.getItem('currentUser')) || null,
+    user: JSON.parse(localStorage.getItem('user')) || null,
+    role: localStorage.getItem('userRole') || '',
   }),
-
+  
+  getters: {
+    username: (state) => state.user?.username || '', 
+    isLoggedIn: (state) => !!state.user
+  },
   actions: {
-    register(newUser) {
-      const exists = this.users.find(u => u.email === newUser.email)
-      if (exists) throw new Error('User already registered')
-
-      this.users.push(newUser)
-      localStorage.setItem('users', JSON.stringify(this.users))
+    async register(userData) {
+      const res = await axios.post(`${baseURL}/auth/register`, userData)
+      this.user = res.data.user
+      this.role = res.data.user.role
+      localStorage.setItem('userRole', this.role)
     },
-
-    login({ email, password }) {
-      const user = this.users.find(u => u.email === email && u.password === password)
-
-      if (!user) throw new Error('Invalid email or password')
-
-      this.currentUser = user
-      localStorage.setItem('currentUser', JSON.stringify(user))
+    async login(userData) {
+      try {
+        const res = await axios.post(`${baseURL}/auth/login`, userData)
+        this.user = res.data.user
+        this.role = res.data.user.role
+    
+        localStorage.setItem('user', JSON.stringify(this.user))
+        localStorage.setItem('userRole', this.role)
+      } catch (error) {
+        throw error
+      }
     },
 
     logout() {
-      this.currentUser = null
-      localStorage.removeItem('currentUser')
-    },
-  },
-
-  getters: {
-    isLoggedIn: (state) => !!state.currentUser,
-    role: (state) => state.currentUser?.role || null,
-    username: (state) => state.currentUser?.username || '',
-  },
+      this.user = null
+      this.role = ''
+      localStorage.removeItem('user')
+      localStorage.removeItem('userRole')
+    }
+    
+  }
 })

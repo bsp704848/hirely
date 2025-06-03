@@ -62,17 +62,17 @@ import teamImage from '../assets/team.jpg'
             <div class="max-w-6xl mx-auto px-6 text-center">
                 <h2 class="text-3xl font-bold text-green-700 mb-8">What Our Customers Say</h2>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow hover:shadow-xl transition">
+                    <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow hover:shadow-slate-950 transition">
                         <p class="italic">“Hirely made hiring our next developer so easy. We posted the job and within
                             days we had the perfect fit.”</p>
                         <div class="mt-4 font-semibold">– Anjali, HR Manager at TechWave</div>
                     </div>
-                    <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow hover:shadow-xl transition">
+                    <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow hover:shadow-slate-950 transition">
                         <p class="italic">“The user interface is fantastic and intuitive. Love the applicant tracking
                             features!”</p>
                         <div class="mt-4 font-semibold">– Rahul, Founder of SmartRecruit</div>
                     </div>
-                    <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow hover:shadow-xl transition">
+                    <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow hover:shadow-slate-950 transition">
                         <p class="italic">“I got my dream job through Hirely in just a week. Highly recommended for job
                             seekers.”</p>
                         <div class="mt-4 font-semibold">– Priya, Frontend Developer</div>

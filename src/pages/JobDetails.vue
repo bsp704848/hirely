@@ -1,103 +1,113 @@
 <script setup>
 import { useJobStore } from '../stores/jobStore'
-import { onMounted,ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 
+const baseURL = import.meta.env.VITE_API_BASE_URL
 const jobStore = useJobStore()
 const route = useRoute()
-const job = jobStore.selectedJob 
 
+const job = computed(() => jobStore.selectedJob)
 const showModal = ref(false)
 const applied = ref(false)
 
-onMounted(() => {
+onMounted(async () => {
     const jobId = route.params.id
-    const allJobs = JSON.parse(localStorage.getItem('allJobs')) || []
-    const foundJob = allJobs.find(job => job.id == jobId)
-
-    if (foundJob) {
-        jobStore.setSelectedJob(foundJob)
+    try {
+        const res = await fetch(`${baseURL}/jobs/${jobId}`)
+        if (!res.ok) throw new Error("Failed to fetch job")
+        const data = await res.json()
+        jobStore.setSelectedJob(data)
+    } catch (err) {
+        console.error("Error fetching job:", err)
     }
 })
 
 const handleApply = () => {
-    applied.value = jobStore.applyForJob(jobStore.selectedJob) 
+    applied.value = jobStore.applyForJob(jobStore.selectedJob)
     showModal.value = true
 }
-
 </script>
 
 <template>
-    <div class="max-w-3xl mx-auto  border rounded-xl p-6 mt-4 shadow-lg hover:shadow-2xl hover:scale-[1.02] transform transition-transform
-        ease-in-out bg-white dark:bg-gray-900 dark:text-white">
+    <div v-if="job" class="max-w-4xl mx-auto mt-6 px-4 sm:px-6 lg:px-8">
+        <!-- Job Header -->
+        <div class="bg-white dark:bg-gray-900 shadow-2xl rounded-2xl p-6 space-y-6 transition hover:scale-[1.01]">
+            <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white">
+                {{ job.jobTitle }}
+            </h2>
 
+            <!-- Job Details Section -->
+            <div>
+                <h3
+                    class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100 border-b-green-500 border-b-4 pb-2">
+                    Job Details</h3>
+                <div class="grid md:grid-cols-2 gap-6 text-gray-700 dark:text-gray-300 text-base">
+                    <p><font-awesome-icon icon="info-circle" class="text-blue-600 mr-2" /> <strong>Description:</strong>
+                        {{ job.jobDetails }}</p>
+                    <p><font-awesome-icon icon="briefcase" class="text-blue-600 mr-2" /> <strong>Category:</strong> {{
+                        job.jobCategory }}</p>
+                    <p><font-awesome-icon icon="clock" class="text-blue-600 mr-2" /> <strong>Type:</strong> {{
+                        job.jobType }}</p>
+                    <p><font-awesome-icon icon="clock" class="text-blue-600 mr-2" /> <strong>Experience:</strong> {{
+                        job.experience }}</p>
+                    <p>
+                        <font-awesome-icon icon="money-bill" class="text-green-600 mr-2" />
+                        <strong>Salary:</strong>
+                        {{ job.salary && typeof job.salary === 'object'
+                        ? `${job.salary.min.toLocaleString()} - ${job.salary.max.toLocaleString()}`
+                        : job.salary }}
+                    </p>
+                    <p><font-awesome-icon icon="users" class="text-purple-600 mr-2" /> <strong>Vacancy:</strong> {{
+                        job.vacancy }}</p>
+                </div>
+            </div>
 
-        <h2 class="text-2xl font-bold text-gray-800 mb-4">{{ job?.title }}</h2>
+            <!-- Company Details Section -->
+            <div class="mt-16">
+                <h3
+                    class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100 border-b-green-500 border-b-4 pb-2">
+                    Company Details
+                </h3>
+                <div class="grid md:grid-cols-2 gap-6 text-gray-700 dark:text-gray-300 text-base">
+                    <p><font-awesome-icon icon="building" class="text-yellow-600 mr-2" /> <strong>Name:</strong> {{
+                        job.company.companyName }}</p>
+                    <p><font-awesome-icon icon="map-marker-alt" class="text-orange-500 mr-2" />
+                        <strong>Location:</strong> {{ job.company.location }}
+                    </p>
+                    <p><font-awesome-icon icon="building" class="text-yellow-600 mr-2" /> <strong>Details:</strong> {{
+                        job.company.companyDetails }}</p>
+                    <p><font-awesome-icon icon="envelope" class="text-red-500 mr-2" /> <strong>Email:</strong> {{
+                        job.company.contactEmail }}</p>
+                    <p><font-awesome-icon icon="phone" class="text-green-500 mr-2" /> <strong>Contact:</strong> {{
+                        job.company.contactPhone }}</p>
+                </div>
+            </div>
 
-
-        <p class="text-gray-700 mb-4">
-            <span class="font-semibold text-gray-900"><i class="pi pi-info-circle text-indigo-600"
-                    style="font-size:large"></i>
-                Description:</span>
-            {{ job?.description }}
-        </p>
-
-
-        <div class="space-y-2 text-sm text-gray-700">
-            <p class="font-semibold"><i class="pi pi-map-marker mr-2 text-orange-400" style="font-size:large"></i><span
-                    class="font-bold">Location:</span> {{
-                job?.location }}</p>
-
-            <p class="font-semibold"><i class="pi pi-bullseye mr-2 text-indigo-600" style="font-size:large"></i><span
-                    class="font-bold">Type:</span> {{ job?.type }}
-            </p>
-            <p class="font-semibold"><i class="pi pi-bullseye mr-2 text-indigo-600" style="font-size:large"></i><span
-                    class="font-bold">Experience:</span> {{ job?.experience }}
-            </p>
-
-            <p class="font-semibold"><i class="pi pi-indian-rupee mr-2 text-indigo-600"
-                    style="font-size:large"></i><span class="
-                    font-bold">Salary:</span> {{
-                job?.salary }}</p>
-
-            <p class="font-semibold"><i class="pi pi-building mr-2 text-indigo-600" style="font-size:large"></i><span
-                    class="font-bold">Company:</span> {{
-                job?.company?.name }}</p>
-
-            <p class="font-semibold"><i class="pi pi-at mr-2 text-indigo-600" style="font-size:large"></i><span
-                    class="font-bold">Email:</span> {{
-                job?.company?.contactEmail }}</p>
-
-            <p class="font-semibold"><i class="pi pi-phone mr-2 text-indigo-600" style="font-size:large"></i><span
-                    class="font-bold">Contact:</span> {{
-                job?.company?.contactPhone }}</p>
-        </div>
-
-
-        <div class="mt-6 text-right">
-            <button @click="handleApply"
-                class="bg-green-500 text-white px-5 py-2 rounded-xl shadow hover:bg-green-700 transition-all">
-                <i class="pi pi-check-circle text-white"></i> Apply Now
-            </button>
-        </div>
-    </div>
-
-    <div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div v-if="applied" class="bg-white rounded-xl shadow-lg p-8 max-w-md w-full text-center">
-            <h2 class="text-2xl font-bold text-green-600 mb-4">Congratulations!</h2>
-            <p class="text-gray-700 mb-4">Your application has been sent. The employer will contact you soon!</p>
-            <button @click="showModal = false"
-                class="mt-4 bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition">
-                OK
-            </button>
-        </div>
-        <div v-else class="bg-white rounded-xl shadow-lg p-8 max-w-md w-full text-center">
-            <h2 class="text-xl font-bold text-red-600 mb-4"> You have already applied for this job.</h2>
-            <button @click="showModal = false"
-                class="mt-4 bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition">
-                OK
-            </button>
+            <!-- Apply Button -->
+            <div class="text-right mt-8">
+                <button @click="handleApply"
+                    class="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded-full shadow-md transition duration-300">
+                    <font-awesome-icon icon="check-circle" class="mr-2" />Apply Now
+                </button>
+            </div>
         </div>
     </div>
 
+    <!-- Modal -->
+    <div v-if="showModal" class="fixed inset-0 bg-white bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-xl max-w-md w-full text-center space-y-4">
+            <h2 :class="applied ? 'text-green-600' : 'text-red-600'" class="text-2xl font-bold">
+                {{ applied ? 'Congratulations!' : 'Already Applied' }}
+            </h2>
+            <p class="text-gray-700 dark:text-gray-300">
+                {{ applied ? 'Your application has been submitted. The employer will contact you shortly.' :
+                'You have already applied for this job.' }}
+            </p>
+            <button @click="showModal = false"
+                class="mt-4 bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg transition">
+                OK
+            </button>
+        </div>
+    </div>
 </template>

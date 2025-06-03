@@ -8,13 +8,17 @@ import router from './router'
 import { createPinia } from 'pinia'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faEdit, faTrash, faPlus, faSave ,faArrowUp,faBars,faXmark,faFilter } from '@fortawesome/free-solid-svg-icons'
+import { faEdit, faInfoCircle, faBriefcase, faClock, faMoneyBill, faUsers,
+    faBuilding, faEnvelope, faPhone, faMapMarkerAlt, faCheckCircle ,faTrash, faPlus, faSave, faArrowUp, faBars, faXmark, faFilter,faLocationDot,faList,faIndianRupee, faFontAwesomeFlag ,} from '@fortawesome/free-solid-svg-icons'
+import vuetify from './plugins/vuetify'
 
-library.add(faEdit, faTrash, faPlus,faSave, faArrowUp,faBars,faXmark,faFilter)
+library.add(faEdit, faTrash, faInfoCircle, faBriefcase, faClock, faMoneyBill, faUsers,
+    faBuilding, faEnvelope, faPhone, faMapMarkerAlt, faCheckCircle,faPlus,faSave, faArrowUp,faBars,faXmark,faFilter,faLocationDot,faList,faIndianRupee,faFontAwesomeFlag)
 const app = createApp(App)
 const pinia = createPinia()
 app.use(pinia)
 app.use(router)
 app.use(Toast)
 app.component('font-awesome-icon', FontAwesomeIcon)
+app.use(vuetify)
 app.mount('#app')

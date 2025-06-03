@@ -15,14 +15,21 @@
     "@fortawesome/free-regular-svg-icons": "^6.7.2",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/vue-fontawesome": "^3.0.8",
+    "@mdi/font": "^7.4.47",
+    "axios": "^1.9.0",
+    "lodash.debounce": "^4.0.8",
     "pinia": "^3.0.2",
     "primeicons": "^7.0.0",
+    "sass": "^1.89.1",
+    "vite-plugin-vuetify": "^2.1.1",
     "vue": "^3.5.13",
     "vue-router": "^4.5.1",
     "vue-toastification": "^2.0.0-rc.5",
-    "vue3-carousel": "^0.15.1"
+    "vue3-carousel": "^0.15.1",
+    "vuetify": "^3.8.7"
   },
   "devDependencies": {
+    "@types/lodash.debounce": "^4.0.9",
     "@vitejs/plugin-vue": "^5.2.3",
     "autoprefixer": "^10.4.14",
     "postcss": "^8.4.21",

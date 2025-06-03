@@ -18,55 +18,12 @@ const showPassword = ref(false)
 
 
 
-// const handleLoginWithLocalStorage = () => {
-//     console.log('Login data:', form.value)
-
-//     const registeredUser = JSON.parse(localStorage.getItem('userData'))
-//     console.log('LocalStorage userData:', registeredUser)
-
-//     if (!registeredUser || !registeredUser.email || !registeredUser.password) {
-//         toast.error('No user found. Please register first.')
-//         return
-//     }
-
-//     if (
-//         registeredUser.email !== form.value.email ||
-//         registeredUser.password !== form.value.password
-//     ) {
-//         toast.error('Invalid email or password.')
-//         return
-//     }
-
-//     const role = registeredUser.role || 'employee'
-
-//     const userData = {
-//         username: form.value.email.split('@')[0],
-//         email: form.value.email,
-//         role,
-//     }
-
-//     authStore.login(userData)
-
-//     toast.success('Login Successful...')
-
-//     setTimeout(() => {
-//         form.value = {
-//             email: '',
-//             password: '',
-//         }
-
-//         if (role === 'employee') {
-//             router.push('/')
-//         } else {
-//             router.push('/employer')
-//         }
-//     }, 2000)
-// }
-
-
-const handleLogin = () => {
+const handleLogin = async () => {
     try {
-        authStore.login(form.value)
+        await authStore.login(form.value) 
+
+        console.log('Login form data:', form.value)
+
         toast.success('Login successful')
 
         setTimeout(() => {
@@ -81,9 +38,10 @@ const handleLogin = () => {
             form.value = { email: '', password: '' }
         }, 1500)
     } catch (err) {
-        toast.error(err.message || 'Login failed')
+        toast.error(err.response?.data?.message || err.message || 'Login failed')
     }
 }
+
 
 </script>
 
@@ -129,7 +87,7 @@ const handleLogin = () => {
                     </p>
 
                     <button type="submit"
-                        class="w-full bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 transition duration-200">
+                        class="w-full bg-[#346de7] text-white rounded-pill font-semibold py-2 transition duration-200 shadow-xl :hover:bg-[#0be43a] hover:shadow-slate-800 hover:scale-100">
                         Login
                     </button>
 
@@ -143,3 +101,6 @@ const handleLogin = () => {
         </div>
     </div>
 </template>
+
+
+

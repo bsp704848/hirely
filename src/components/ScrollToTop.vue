@@ -23,7 +23,7 @@ onUnmounted(() => {
 
 <template>
     <button v-show="isVisible" @click="scrollToTop"
-        class="fixed bottom-6 right-6 z-50 p-4 rounded-full bg-green-600 text-white shadow-lg hover:bg-green-700 transition-all"
+        class="fixed bottom-6 right-6 z-50 p-4 bg-green-500 text-white shadow-lg hover:shadow-2xl hover:bg-green-600 hover:scale-105 transition-all duration-300 rounded-pill"
         aria-label="Scroll to top">
         <font-awesome-icon icon="arrow-up" />
     </button>

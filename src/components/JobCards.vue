@@ -1,4 +1,5 @@
 <script setup>
+import { useRouter } from 'vue-router'
 import JobCard from '../components/JobCard.vue'
 import homeImg from '../assets/icons/home.png'
 import buildingImg from '../assets/icons/building.png'
@@ -9,16 +10,21 @@ import moneyImg from '../assets/icons/money.png'
 import rocketImg from '../assets/icons/rocket.png'
 import marketImg from '../assets/icons/market.png'
 
+const router = useRouter()
+
+function goToCategory(category) {
+    router.push({ name: 'joblist', query: { category } })
+}
 
 const jobs = [
-    { image: homeImg, title: 'Remote' },
-    { image: buildingImg, title: 'MNC' },
-    { image: monitorImg, title: 'Software & Dev' },
-    { image: dataImg, title: 'Data Science' },
-    { image: engineeringImg, title: 'Engineering' },
-    { image: moneyImg, title: 'Banking & Finance' },
-    { image: rocketImg, title: 'Startups' },
-    { image: marketImg, title: 'Marketing' },
+    { image: homeImg, title: 'Writing & Content' },
+    { image: buildingImg, title: 'Business & Management' },
+    { image: monitorImg, title: 'Software & Development' },
+    { image: dataImg, title: 'Education & Training' },
+    { image: engineeringImg, title: 'Engineering / Technical' },
+    { image: moneyImg, title: 'Accounting & Finance' },
+    { image: rocketImg, title: 'Logistics / Operations' },
+    { image: marketImg, title: 'Sales & Marketing' },
 
 ]
 </script>
@@ -29,7 +35,10 @@ const jobs = [
             <p>Find your <span class="text-green-600">dream job now</span> </p>
         </div>
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 p-4 bg-white rounded-lg">
-            <JobCard v-for="(job, index) in jobs" :key="index" :image="job.image" :title="job.title" />
+            <div v-for="(job, index) in jobs" :key="index" @click="goToCategory(job.title)"
+                class="cursor-pointer hover:scale-105 transition-all duration-300">
+                <JobCard :image="job.image" :title="job.title" />
+            </div>
         </div>
     </div>
 </template>

@@ -3,8 +3,11 @@ defineProps({
     image: String,
     title: String,
     description: String,
-    id: Number,     
+    id: [String, Number] 
+     
 })
+
+
 </script>
 
 <template>

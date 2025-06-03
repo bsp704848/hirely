@@ -9,6 +9,8 @@ import { useUserStore } from './stores/userStore'
 import { useJobStore } from './stores/jobStore'
 import { useAuthStore } from './stores/authStore'
 
+
+
 const route = useRoute()
 const router = useRouter()
 const isEmployer = ref(route.path === '/employer')
@@ -48,6 +50,7 @@ watch(route, (newRoute) => {
       </main>
       <ScrollToTop />
       <Footer />
+
     </div>
-  </div>
+    </div>
 </template>

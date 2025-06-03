@@ -22,37 +22,34 @@ const showPassword = ref(false)
 const showConfirmPassword = ref(false)
 const errorMessage = ref('')
 
-const handleSubmit = () => { 
+const handleSubmit = async () => { 
     if (!form.value.username || !form.value.email || !form.value.password || !form.value.confirmPassword || !form.value.role) {
-        errorMessage.value = 'Please fill in all fields'
-        return
+        errorMessage.value = 'Please fill in all fields';
+        return;
     }
 
     if (form.value.password !== form.value.confirmPassword) {
-        errorMessage.value = 'Passwords do not match'
-        return
+        errorMessage.value = 'Passwords do not match';
+        return;
     }
-    errorMessage.value = ''
-    
+    errorMessage.value = '';
     
     const newUser = {
         username: form.value.username,
         email: form.value.email,
         password: form.value.password,
         role: form.value.role,
-    }
+    };
     
-    localStorage.setItem('userRole', form.value.role)
+    localStorage.setItem('userRole', form.value.role);
     
     try {
-        authStore.register(newUser)
-        toast.success(`${newUser.username} registered successfully as ${newUser.role}`)
-        setTimeout(() => {
-            router.push('/login')
-            form.value = { username: '', email: '', password: '', confirmPassword: '', role: '' }
-        }, 1500)
+        await authStore.register(newUser); // Ensure this method does not redirect
+        toast.success(`${newUser.username} registered successfully as ${newUser.role}`);
+        router.push('/login'); // Explicitly navigate to the login page
+        form.value = { username: '', email: '', password: '', confirmPassword: '', role: '' };
     } catch (error) {
-        toast.error(error.message)
+        toast.error(error.message);
     }
 
 
@@ -120,7 +117,7 @@ const handleSubmit = () => {
 
 
                     <button type="submit"
-                        class="col-span-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition duration-200">
+                        class="col-span-2 w-full bg-[#346de7] text-white rounded-pill font-semibold py-2 transition duration-200 shadow-xl :hover:bg-[#0be43a] hover:shadow-slate-800 hover:scale-100">
                         Register
                     </button>
                 </form>

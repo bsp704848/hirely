@@ -1,17 +1,12 @@
 <script setup>
 import { RouterLink, useRouter, useRoute } from 'vue-router'
 import logo from '../assets/logo1.png'
-import { defineProps, ref, onMounted, onBeforeUnmount,computed } from 'vue'
+import { ref, onMounted, onBeforeUnmount,computed } from 'vue'
 import { useAuthStore } from '../stores/authStore'
 
-
-
-const isEmployer = computed(() => authStore.role === 'employer')
-
-
-const showDropdown = ref(false)
-
 const authStore = useAuthStore()
+const isEmployer = computed(() => authStore.role === 'employer')
+const showDropdown = ref(false)
 const router = useRouter()
 const route = useRoute()
 

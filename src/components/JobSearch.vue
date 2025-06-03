@@ -1,20 +1,16 @@
 <script setup>
-
 defineProps(['modelValue'])
-defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue'])
+</script>
 
- </script>
- 
 <template>
     <div class="px-4 mb-8">
         <div class="flex justify-center">
-            <input :value="modelValue" @input="$emit('update:modelValue', $event.target.value)" type="text"
-                placeholder="Search by title, company..."
-                class="w-full max-w-md p-3 rounded-md border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500" />
+            <v-text-field :model-value="modelValue" @update:model-value="emit('update:modelValue', $event)"
+                label="Search by title, company..." variant="outlined" density="comfortable" clearable
+                class="w-full max-w-md" prepend-inner-icon="mdi-magnify" />
         </div>
     </div>
 </template>
 
 
-
-  

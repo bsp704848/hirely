@@ -17,7 +17,7 @@ const routes = [
   { path: '/login',name:'LoginPage', component: LoginPage },
   { path: '/employer', name: 'EmployerDashboard', component: EmployerDashboard , meta: { requiresAuth: true, role: 'employer' }},
   { path: '/addJob',name:'JobForm', component: JobForm , meta: { requiresAuth: true, role: 'employer' } },
-  { path: '/jobs', component: JobList },
+  { path: '/jobs',name: 'joblist', component: JobList },
   { path: '/job/:id', component: JobDetails , meta: { requiresAuth: true, role: 'employee' } },
   { path: '/about', component: AboutPage },
   { path: '/employerjoblist/:id', component: EmployerJobListPage , meta: { requiresAuth: true, role: 'employer' }  },
