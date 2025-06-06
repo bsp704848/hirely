@@ -2,9 +2,9 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useToast } from 'vue-toastification'
-import Image from '../assets/register.png'
 import { useAuthStore } from '../stores/authStore'
-
+import LottiePlayer from '../components/LottiePlayer.vue'
+import signupAnimation from '../assets/signup.json'
 
 const form = ref({
     username: '',
@@ -16,13 +16,13 @@ const form = ref({
 
 const authStore = useAuthStore()
 const router = useRouter()
-const toast = useToast() 
+const toast = useToast()
 
 const showPassword = ref(false)
 const showConfirmPassword = ref(false)
 const errorMessage = ref('')
 
-const handleSubmit = async () => { 
+const handleSubmit = async () => {
     if (!form.value.username || !form.value.email || !form.value.password || !form.value.confirmPassword || !form.value.role) {
         errorMessage.value = 'Please fill in all fields';
         return;
@@ -33,27 +33,23 @@ const handleSubmit = async () => {
         return;
     }
     errorMessage.value = '';
-    
+
     const newUser = {
         username: form.value.username,
         email: form.value.email,
         password: form.value.password,
         role: form.value.role,
     };
-    
-    localStorage.setItem('userRole', form.value.role);
-    
+
     try {
-        await authStore.register(newUser); // Ensure this method does not redirect
+        await authStore.register(newUser);
+        authStore.logout();
         toast.success(`${newUser.username} registered successfully as ${newUser.role}`);
-        router.push('/login'); // Explicitly navigate to the login page
+        router.push('/login');
         form.value = { username: '', email: '', password: '', confirmPassword: '', role: '' };
     } catch (error) {
         toast.error(error.message);
     }
-
-
-
 }
 </script>
 
@@ -61,7 +57,7 @@ const handleSubmit = async () => {
     <div class="min-h-screen grid grid-cols-1 md:grid-cols-2">
 
         <div class="hidden md:flex items-center justify-center">
-            <img :src="Image" alt="Register" class="w-3/4 h-auto object-contain" />
+            <LottiePlayer :animationData="signupAnimation" />
         </div>
 
         <div class="flex items-center justify-center p-8">
@@ -113,7 +109,8 @@ const handleSubmit = async () => {
                     </div>
 
                     <p v-if="errorMessage" class="col-span-2 text-red-500 text-center text-sm">{{ errorMessage }}</p>
-                    <p class="col-span-2 text-center text-sm">Already Registered ? <router-link to="/login" class="text-blue-700 font-semibold">Login</router-link> here</p>
+                    <p class="col-span-2 text-center text-sm">Already Registered ? <router-link to="/login"
+                            class="text-blue-700 font-semibold">Login</router-link> here</p>
 
 
                     <button type="submit"

@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue';
-import { useRouter,useRoute } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import debounce from 'lodash.debounce';
 import JobCard from '../components/JobCard.vue';
 import defaultImage from '../assets/icons/default.png';
@@ -8,11 +8,15 @@ import { useAuthStore } from '../stores/authStore';
 import JobSearch from '../components/JobSearch.vue';
 import SalaryFilter from '../components/SalaryFilter.vue';
 import ExperienceFilter from '../components/ExperienceFilter.vue';
+import Pagination from '../components/Pagination.vue';
 const baseURL = import.meta.env.VITE_API_BASE_URL;
+import '../assets/Styles/jobList.css';
 
 
 
 const jobs = ref([]);
+const jobsPerPage = 4
+const currentPage = ref(1)
 const auth = useAuthStore();
 const router = useRouter();
 const route = useRoute()
@@ -26,7 +30,7 @@ const isLoading = ref(true);
 
 const navigateTo = (jobId) => {
     const role = auth.role || 'employee';
-    router.push(role === 'employer' ? `/employerjoblist/${jobId}` : `/job/${jobId}`);
+    router.push(role === 'employer' ? `/EmployerJobs/${jobId}` : `/job/${jobId}`);
 };
 
 onMounted(async () => {
@@ -36,7 +40,7 @@ onMounted(async () => {
 
         const category = route.query.category
         if (category) {
-            searchQuery.value = category 
+            searchQuery.value = category
         }
 
         if (Array.isArray(data)) {
@@ -67,49 +71,62 @@ onMounted(async () => {
     }
 });
 
-watch(() => route.query.category, (newCategory) => {
-    selectedCategory.value = newCategory || ''
-})
+const totalPages = computed(() =>
+    Math.ceil(jobs.value.length / jobsPerPage)
+)
 
 
-const filteredJobs = computed(() => {
-    return jobs.value.filter(job => {
+function handlePageChange(page) {
+    currentPage.value = page
+}
+
+
+function safeLower(str) {
+    return typeof str === 'string' ? str.toLowerCase() : '';
+}
+
+const paginatedJobs = computed(() => {
+    const filteredJobs = jobs.value.filter(job => {
 
         let salaryPass = false;
         if (job.salary && typeof job.salary === 'object') {
-            salaryPass = (
+            salaryPass =
                 job.salary.min >= selectedSalaryRange.value.min &&
-                job.salary.max <= selectedSalaryRange.value.max
-            );
+                job.salary.max <= selectedSalaryRange.value.max;
         } else {
             const rawSalary = job.salary || '0';
             const numericSalary = parseInt(rawSalary.toString().replace(/[^\d]/g, ''));
-            salaryPass = (
+            salaryPass =
                 !isNaN(numericSalary) &&
                 numericSalary >= selectedSalaryRange.value.min &&
-                numericSalary <= selectedSalaryRange.value.max
-            );
+                numericSalary <= selectedSalaryRange.value.max;
         }
 
-        const matchesCategory = !selectedCategory.value || job.jobCategory === selectedCategory.value
-        const matchesSalary = salaryPass; 
-        const query = searchQuery.value.toLowerCase();
-        const title = job.jobTitle?.toLowerCase() || '';
-        const company = job.company?.companyName?.toLowerCase() || '';
-        const location = job.company?.location?.toLowerCase() || '';
-        const type = job.jobType?.toLowerCase() || '';
-        const jobId = job._id?.toLowerCase() || '';
-        const jobCategory = job.jobCategory?.toLowerCase() || '';
-        const matchesSearch = title.includes(query) || company.includes(query) || location.includes(query) || type.includes(query) || jobId.includes(query) || jobCategory.includes(query);
 
+        const matchesCategory = !selectedCategory.value || job.jobCategory === selectedCategory.value;
+        const query = safeLower(searchQuery.value);
+        const title = safeLower(job.jobTitle);
+        const company = safeLower(job.company?.companyName);
+        const location = safeLower(job.company?.location);
+        const type = safeLower(job.jobType);
+        const jobId = safeLower(job._id);
+        const jobCategory = safeLower(job.jobCategory);
+        const matchesSearch =
+            title.includes(query) ||
+            company.includes(query) ||
+            location.includes(query) ||
+            type.includes(query) ||
+            jobId.includes(query) ||
+            jobCategory.includes(query);
         const expFilter = selectedExperience.value;
         const matchesExperience = expFilter === 'All' || job.experience === expFilter;
 
-        return matchesCategory && matchesSearch && matchesSalary && matchesExperience;
-
+        return matchesCategory && matchesSearch && salaryPass && matchesExperience;
     });
-});
 
+    const start = (currentPage.value - 1) * jobsPerPage;
+    return filteredJobs.slice(start, start + jobsPerPage);
+});
 
 
 watch(selectedSalaryRange, (newRange) => {
@@ -119,9 +136,18 @@ watch(selectedSalaryRange, (newRange) => {
     }
 });
 
+watch(() => route.query.category, (newCategory) => {
+    selectedCategory.value = newCategory || ''
+})
+
 watch(searchQuery, debounce((val) => {
     debouncedQuery.value = val;
 }, 300));
+
+watch([searchQuery, selectedSalaryRange, selectedExperience], () => {
+    currentPage.value = 1;
+});
+
 
 function handleSalaryChange(range) {
     selectedSalaryRange.value = range;
@@ -134,113 +160,51 @@ function handleExperienceChange(exp) {
 </script>
 
 <template>
-    <div class="flex flex-col items-center justify-center px-4 py-6">
-        <div class="flex flex-wrap-responsive w-full max-w-7xl gap-16 mx-auto">
-
-            <aside class="w-full max-w-xs space-y-6 p-4 py-8  shadow-green-400 border-r-green-400 border-r-8">
-                <h2 class="text-center font-medium text-xl">Choose your Dream job...</h2>
-                <JobSearch v-model="searchQuery" />
+    <div class="joblist-wrapper">
+        <div class="joblist-container">
+            <aside class="joblist-sidebar">
+                <h2 class="font-bold">All Filters</h2>
+                <JobSearch v-model="searchQuery" @clear-search="fetchAllJobs" />
                 <SalaryFilter :salaryRange="selectedSalaryRange" @salary-changed="handleSalaryChange" />
                 <ExperienceFilter @experience-changed="handleExperienceChange" />
+                <Pagination :currentPage="currentPage" :totalPages="totalPages" @page-changed="handlePageChange" />
             </aside>
 
-            <section class="flex-1">
-                <h2 class="text-4xl md:text-5xl font-bold mb-10 text-center text-gray-800 tracking-tight">
-                    Latest Jobs
-                </h2>
-                <div v-if="isLoading" class="flex items-center justify-center h-64">
-                    <p class="text-gray-500">Loading jobs...</p>
+            <section class="joblist-main">
+                <h2 class="joblist-heading">Latest Jobs</h2>
+                <div v-if="isLoading" class="loading-wrapper">
+                    <p>Loading jobs...</p>
                 </div>
-                <div v-else class="grid gap-10 auto-grid justify-center min-h-[400px]">
-                    <JobCard class="job-card" v-for="job in filteredJobs" :key="job._id" :title="job.jobTitle"
-                        :id="job._id" :image="defaultImage">
+                <div v-else>
+                    <div class="auto-grid-wrapper">
+                        <div class="auto-grid">
+                            <JobCard class="job-card" v-for="job in paginatedJobs" :key="job._id" :title="job.jobTitle"
+                                :id="job._id" :image="defaultImage">
 
-                        <p class="text-sm font-bold text-gray-500">
-                            <font-awesome-icon icon="location-dot" class="text-red-800" />
-                            Location: <span class="font-semibold">{{ job.company.location }}</span>
-                        </p>
-                        <p class="text-sm font-bold text-gray-500">
-                            <font-awesome-icon :icon="['fas', 'list']" class="text-blue-600" />
-                            Category: <span class="font-semibold">{{ job.jobCategory }}</span>
-                        </p>
+                                <p><font-awesome-icon icon="location-dot" /> Location: <span>{{ job.company.location
+                                }}</span></p>
+                                <p><font-awesome-icon :icon="['fas', 'list']" /> Category: <span>{{ job.jobCategory
+                                }}</span></p>
+                                <p><font-awesome-icon :icon="['fas', 'indian-rupee-sign']" /> Salary:
+                                    <span>
+                                        {{ job.salary && typeof job.salary === 'object'
+                                            ? `${job.salary.min.toLocaleString()} - ${job.salary.max.toLocaleString()}`
+                                            : job.salary }} &#8377; /month
+                                    </span>
+                                </p>
+                                <p><font-awesome-icon :icon="['fas', 'font-awesome']" /> Type: <span>{{ job.jobType
+                                }}</span></p>
+                                <p><font-awesome-icon :icon="['fas', 'building']" /> Company: <span>{{
+                                    job.company.companyName }}</span></p>
 
-                        <p class="text-sm font-bold text-gray-500">
-                            <font-awesome-icon :icon="['fas', 'indian-rupee-sign']" class="text-green-600" />
-                            Salary:
-                            <span class="font-semibold">
-                                {{ job.salary && typeof job.salary === 'object'
-                                ? `${job.salary.min.toLocaleString()} - ${job.salary.max.toLocaleString()}`
-                                : job.salary }}
-                            </span>
-                        </p>
-                        <p class="text-sm font-bold text-gray-500">
-                            <font-awesome-icon :icon="['fas', 'font-awesome']" class="text-blue-600" />
-                            Type: <span class="font-semibold">{{ job.jobType }}</span>
-                        </p>
-                        <p class="text-sm font-bold text-gray-500">
-                            <font-awesome-icon :icon="['fas', 'building']" class="text-blue-500" />
-                            Company: <span class="font-semibold">{{ job.company.companyName }}</span>
-                        </p>
-
-                        <button
-                            class="p-2 bg-green-500 text-white shadow-lg hover:bg-green-600 hover:scale-105 transition-all duration-300 rounded-pill text-sm font-bold"
-                            @click="navigateTo(job._id)">
-                            Show Details
-                        </button>
-                    </JobCard>
+                                <button class="show-details-btn" @click="navigateTo(job._id)">
+                                    Show Details
+                                </button>
+                            </JobCard>
+                        </div>
+                    </div>
                 </div>
             </section>
         </div>
     </div>
 </template>
-
-<style scoped>
-.auto-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-    min-height: 400px;
-    align-items: start;
-    justify-content: center;
-    width: 100%;
-}
-
-.auto-grid:only-child {
-    justify-content: center;
-}
-
-.job-card {
-    background-color: #ffffff;
-    padding: 1.5rem;
-    border-radius: 1rem;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    height: 100%;
-}
-
-.job-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
-}
-
-@media (max-width: 1024px) {
-    .auto-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .flex-wrap-responsive {
-        flex-direction: column;
-    }
-
-    aside {
-        max-width: 100% !important;
-        width: 100% !important;
-    }
-
-    section {
-        width: 100%;
-    }
-}
-</style>

@@ -22,7 +22,12 @@ const jobSchema = new Schema({
         type: Date,
         default: Date.now,
     },
+    createdBy: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
 });
 
 export default model("Job", jobSchema);
- 
+

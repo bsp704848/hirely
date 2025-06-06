@@ -1,9 +1,14 @@
 <script setup>
 import { reactive, watch } from 'vue';
 import { useToast } from 'vue-toastification';
-import formImage from '../assets/emp3.png';
+import { useRouter } from 'vue-router'
 import { useJobStore } from '../stores/jobStore';
 const baseURL = import.meta.env.VITE_API_BASE_URL;
+import postJobAnimation from '../assets/postJob.json'
+import Lottieplayer from '../components/LottiePlayer.vue'
+import { useAuthStore } from '../stores/authStore';
+
+const authStore = useAuthStore();
 
 
 const emit = defineEmits(['update', 'create']);
@@ -15,12 +20,14 @@ const props = defineProps({
     },
 });
 
+const router = useRouter();
+
 const form = reactive({
     jobCategory: { label: 'Select The Category', value: '' },
     jobType: { label: 'Full-Time', value: 'Full-Time' },
     jobTitle: '',
     jobDetails: '',
-    salary: null,
+    salary: { label: 'Select Salary', value: null },
     experience: { label: 'Fresher', value: 'Fresher' },
     vacancy: '',
     company: {
@@ -63,7 +70,7 @@ const experienceOptions = [
     { label: '3 to 4 yrs', value: '3 to 4 yrs' },
     { label: '5 to 6 yrs', value: '5 to 6 yrs' },
     { label: '7 to 8 yrs', value: '7 to 8 yrs' },
-    { label: '9 to 10 yrs', value: '8 to 9 yrs' },
+    { label: '9 to 10 yrs', value: '9 to 10 yrs' },
     { label: 'Up to 10 years', value: 'up to 10 years' },
 ];
 
@@ -89,7 +96,20 @@ watch(
     () => props.initialData,
     (newData) => {
         if (newData && typeof newData === 'object') {
-            Object.assign(form, JSON.parse(JSON.stringify(newData)));
+            form.jobCategory.value = newData.jobCategory || '';
+            form.jobType.value = newData.jobType || '';
+            form.salary.value = newData.salary || null;
+            form.experience.value = newData.experience || '';
+            form.jobTitle = newData.jobTitle || '';
+            form.jobDetails = newData.jobDetails || '';
+            form.vacancy = newData.vacancy || '';
+            form.company = {
+                companyName: newData.company?.companyName || '',
+                location: newData.company?.location || '',
+                companyDetails: newData.company?.companyDetails || '',
+                contactEmail: newData.company?.contactEmail || '',
+                contactPhone: newData.company?.contactPhone || '',
+            };
         }
     },
     { immediate: true }
@@ -107,7 +127,7 @@ const handleSubmit = async () => {
         jobType: form.jobType.value,
         jobTitle: form.jobTitle.trim(),
         jobDetails: form.jobDetails.trim(),
-        salary: form.salary ? JSON.parse(JSON.stringify(form.salary)) : null,
+        salary: form.salary.value || null,
         experience: form.experience.value,
         vacancy: form.vacancy,
         company: {
@@ -119,50 +139,28 @@ const handleSubmit = async () => {
         },
     };
 
-    const url = isEdit
-        ? `${baseURL}/jobs/${props.initialData._id || props.initialData.id}`
-        : `${baseURL}/jobs/add`;
-
-    const method = isEdit ? 'PUT' : 'POST';
-
     try {
-        const res = await fetch(url, {
-            method,
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(jobData),
-        });
-
-        const data = await res.json();
-
-        if (res.ok) {
-            toast.success(isEdit ? 'Job updated successfully!' : 'Job added successfully!');
-            emit(isEdit ? 'update' : 'create', data);
-
-            if (!isEdit) {
-               
-                Object.assign(form, {
-                    jobCategory: { label: 'Select The Category', value: '' },
-                    jobType: { label: 'Full-Time', value: 'Full-Time' },
-                    jobTitle: '',
-                    jobDetails: '',
-                    salary: null,
-                    experience: { label: 'Fresher', value: 'Fresher' },
-                    vacancy: '',
-                    company: {
-                        companyName: '',
-                        location: '',
-                        companyDetails: '',
-                        contactEmail: '',
-                        contactPhone: '',
-                    },
-                });
+        if (isEdit) {
+            const res = await fetch(`${baseURL}/jobs/${props.initialData._id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(jobData),
+            });
+            const data = await res.json();
+            if (res.ok) {
+                toast.success('Job updated successfully!');
+                emit('update', data);
             }
         } else {
-            toast.error(data?.message || 'Something went wrong!');
+            const newJob = await jobStore.saveJob(jobData);
+            toast.success('Job added successfully!');
+            emit('create', newJob);
         }
+
+        router.push(authStore.role === 'employer' ? '/EmployerJobspage' : '/jobs');
     } catch (err) {
         console.error(err);
-        toast.error('Server Error: Could not submit job.');
+        toast.error(err.response?.data?.message || 'Error submitting job');
     }
 };
 
@@ -173,12 +171,12 @@ const handleSubmit = async () => {
     <section class=" py-16 px-4">
         <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
 
-            <div class="flex flex-col justify-center items-start p-6">
-                <h2 class="text-4xl font-bold text-green-700 mb-4">Post Your Job</h2>
-                <p class="text-gray-600 mb-6">Fill out the form to add a new job listing. Provide details like job
+            <div class="flex flex-col justify-center items-start">
+                <h2 class="text-4xl font-bold mb-4"><span class="text-green-500">Post</span> Your Job</h2>
+                <p class="text-gray-600">Fill out the form to add a new job listing. Provide details like job
                     type,
                     description, salary and company info.</p>
-                <img :src="formImage" alt="Job" class="w-full max-w-sm" />
+                <Lottieplayer :animationData="postJobAnimation" />
             </div>
 
 
@@ -188,8 +186,8 @@ const handleSubmit = async () => {
                     <div>
                         <label for="category" class="block text-sm text-gray-700 font-bold mb-2">Job
                             Category</label>
-                        <select v-model="form.jobCategory" class="border rounded w-full py-2 px-3" required>
-                            <option v-for="option in categoryOptions" :key="option.value" :value="option">
+                        <select v-model="form.jobCategory.value" class="border rounded w-full py-2 px-3" required>
+                            <option v-for="option in categoryOptions" :key="option.value" :value="option.value">
                                 {{ option.label }}
                             </option>
                         </select>
@@ -198,8 +196,8 @@ const handleSubmit = async () => {
 
                     <div>
                         <label for="type" class="block text-sm text-gray-700 font-bold mb-2">Job Type</label>
-                        <select v-model="form.jobType" class="border rounded w-full py-2 px-3" required>
-                            <option v-for="option in jobTypeOptions" :key="option.value" :value="option">
+                        <select v-model="form.jobType.value" class="border rounded w-full py-2 px-3" required>
+                            <option v-for="option in jobTypeOptions" :key="option.value" :value="option.value">
                                 {{ option.label }}
                             </option>
                         </select>
@@ -220,7 +218,7 @@ const handleSubmit = async () => {
 
                     <div>
                         <label for="salary" class="block text-sm text-gray-700 font-bold mb-2">Salary</label>
-                        <select v-model="form.salary" id="salary" class="border text-sm rounded w-full py-2 px-3"
+                        <select v-model="form.salary.value" id="salary" class="border text-sm rounded w-full py-2 px-3"
                             required>
                             <option :value="null">Select the Salary</option>
                             <option v-for="(option, index) in salaryOptions" :key="index" :value="option.value">
@@ -233,8 +231,8 @@ const handleSubmit = async () => {
 
                     <div>
                         <label for="type" class="block text-sm text-gray-700 font-bold mb-2">Experience</label>
-                        <select v-model="form.experience" class="border rounded w-full py-2 px-3" required>
-                            <option v-for="option in experienceOptions" :key="option.value" :value="option">
+                        <select v-model="form.experience.value" class="border rounded w-full py-2 px-3" required>
+                            <option v-for="option in experienceOptions" :key="option.value" :value="option.value">
                                 {{ option.label }}
                             </option>
                         </select>

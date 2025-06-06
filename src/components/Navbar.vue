@@ -1,10 +1,11 @@
 <script setup>
 import { RouterLink, useRouter, useRoute } from 'vue-router'
 import logo from '../assets/logo1.png'
-import { ref, onMounted, onBeforeUnmount,computed } from 'vue'
+import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
 import { useAuthStore } from '../stores/authStore'
 
 const authStore = useAuthStore()
+console.log('Navbar authStore state:', authStore);
 const isEmployer = computed(() => authStore.role === 'employer')
 const showDropdown = ref(false)
 const router = useRouter()
@@ -15,28 +16,32 @@ const logout = () => {
     router.push('/')
 }
 
-const isMenuOpen = ref(false) 
+const isMenuOpen = ref(false)
 
 function toggleDropdown() {
     showDropdown.value = !showDropdown.value
-} 
+}
 
 function handleClickOutside(event) {
     if (!event.target.closest('.relative')) {
         showDropdown.value = false
     }
-} 
+}
 
 onMounted(() => {
-    document.addEventListener('click', handleClickOutside)
-})
+    const hasToken = document.cookie.includes('token=');
+    if ((hasToken || localStorage.getItem('user')) && !authStore.user) {
+        authStore.fetchUser(router);
+    }
+    document.addEventListener('click', handleClickOutside);
+});
 
 onBeforeUnmount(() => {
     document.removeEventListener('click', handleClickOutside)
-}) 
+})
 
 const isActive = (path) => {
-  return route.path === path
+    return route.path === path
 }
 
 </script>
@@ -65,13 +70,13 @@ const isActive = (path) => {
                     ]">
                         Home
                     </RouterLink>
-                    <RouterLink to="/jobs" :class="[
+                    <RouterLink :to="isEmployer ? '/EmployerJobspage' : '/jobs'" :class="[
                         'p-2 rounded transition-colors',
                         isActive('/jobs') ? 'bg-green-300 text-green-800 font-semibold' : 'hover:text-green-800 hover:bg-green-300'
                     ]">Jobs</RouterLink>
 
                     <RouterLink v-if="authStore.role === 'employer'" to="/addjob"
-                        :class="['p-2 rounded transition-colors', isActive('/addjob') ? 'bg-green-300 text-green-800 font-semibold'  : 'hover:text-green-800 hover:bg-green-300' ]">
+                        :class="['p-2 rounded transition-colors', isActive('/addjob') ? 'bg-green-300 text-green-800 font-semibold' : 'hover:text-green-800 hover:bg-green-300']">
                         Post Job
                     </RouterLink>
                 </div>
@@ -79,7 +84,6 @@ const isActive = (path) => {
                 <div class="flex gap-4 items-center">
                     <template v-if="authStore.isLoggedIn">
                         <div class="relative">
-
                             <span @click="toggleDropdown"
                                 class="p-2 cursor-pointer text-gray-700 font-semibold hover:text-green-800 hover:bg-green-300 rounded">
                                 Hello, {{ authStore.username }}
@@ -87,39 +91,51 @@ const isActive = (path) => {
                             <div v-if="showDropdown"
                                 class="absolute mt-2 bg-white border rounded shadow p-2 text-sm z-50 w-40">
                                 <p class="text-gray-600">Role : <span class="font-medium text-green-500 capitalize">{{
-                                        authStore.role }}</span></p>
+                                    authStore.role }}</span></p>
                                 <button @click="logout" class="text-red-600 hover:underline">Logout</button>
                             </div>
                         </div>
-                        <RouterLink to="/about" :class="[
-                            'p-2 rounded transition-colors font-semibold',
-                            isActive('/about') ? 'bg-green-300 text-green-800 font-bold' : 'hover:text-green-800 hover:bg-green-300'
-                        ]">About
-                        </RouterLink>
                     </template>
                     <template v-else>
                         <RouterLink to="/login" class="text-green-600 hover:underline">Login</RouterLink>
                         <RouterLink to="/register" class="text-green-600 hover:underline">Register</RouterLink>
                     </template>
+                    <RouterLink to="/about" :class="[
+                        'p-2 rounded transition-colors font-semibold',
+                        isActive('/about') ? 'bg-green-300 text-green-800 font-bold' : 'hover:text-green-800 hover:bg-green-300'
+                    ]">About
+                    </RouterLink>
                 </div>
             </div>
         </div>
 
 
         <div v-if="isMenuOpen" class="md:hidden mt-4 px-4 space-y-4 text-base font-medium">
-            <RouterLink to="/" class="block p-2 rounded hover:bg-green-100" @click="isMenuOpen = false">Home
+            <RouterLink :to="isEmployer ? '/employer' : '/'" class="block p-2 rounded hover:bg-green-100"
+                @click="isMenuOpen = false">Home
             </RouterLink>
-            <RouterLink to="/jobs" class="block p-2 rounded hover:bg-green-100" @click="isMenuOpen = false">Jobs
-            </RouterLink>
-            <RouterLink to="/about" class="block p-2 rounded hover:bg-green-100" @click="isMenuOpen = false">About
+            <RouterLink :to="isEmployer ? '/EmployerJobspage' : '/jobs'" class="block p-2 rounded hover:bg-green-100"
+                @click="isMenuOpen = false">Jobs
             </RouterLink>
 
             <RouterLink v-if="authStore.role === 'employer'" to="/addjob" class="block p-2 rounded hover:bg-green-100"
                 @click="isMenuOpen = false">Post Job</RouterLink>
 
             <template v-if="authStore.isLoggedIn">
-                <div class="p-2 font-semibold text-gray-700">Hello, {{ authStore.username }}</div>
-                <button @click="logout" class="text-red-600 hover:underline">Logout</button>
+                <div class="relative">
+
+                    <span @click="toggleDropdown"
+                        class="p-2 cursor-pointer text-gray-700 font-semibold hover:text-green-800 hover:bg-green-300 rounded">
+                        Hello, {{ authStore.username }}
+                    </span>
+                    <div v-if="showDropdown" class="absolute mt-2 bg-white border rounded shadow p-2 text-sm z-50 w-40">
+                        <p class="text-gray-600">Role : <span class="font-medium text-green-500 capitalize">{{
+                            authStore.role }}</span></p>
+                        <button @click="logout" class="text-red-600 hover:underline">Logout</button>
+                    </div>
+                </div>
+                <RouterLink to="/about" class="block p-2 rounded hover:bg-green-100" @click="isMenuOpen = false">About
+                </RouterLink>
             </template>
             <template v-else>
                 <RouterLink to="/login" class="block text-green-600 hover:underline" @click="isMenuOpen = false">Login

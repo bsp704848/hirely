@@ -2,8 +2,9 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useToast } from 'vue-toastification'
-import loginImage from '../assets/login.png'
 import { useAuthStore } from '../stores/authStore'
+import Lottieplayer from '../components/LottiePlayer.vue'
+import loginAnimation from '../assets/signin.json'
 
 const router = useRouter()
 const toast = useToast()
@@ -16,33 +17,34 @@ const form = ref({
 
 const showPassword = ref(false)
 
-
-
 const handleLogin = async () => {
     try {
-        await authStore.login(form.value) 
-
         console.log('Login form data:', form.value)
+        await authStore.login(form.value);
 
-        toast.success('Login successful')
+        toast.success('Login successful');
 
         setTimeout(() => {
-            const role = authStore.role || 'employee'
+            if (authStore.isLoggedIn) {
+                const role = authStore.role || 'employee';
+                console.log('Redirecting to role-based page:', role);
 
-            if (role === 'employee') {
-                router.push('/')
+                if (role === 'employee') {
+                    router.push('/');
+                } else {
+                    router.push('/employer');
+                }
             } else {
-                router.push('/employer')
+                router.push('/login');
             }
 
-            form.value = { email: '', password: '' }
-        }, 1500)
+            form.value = { email: '', password: '' };
+        }, 1500);
     } catch (err) {
-        toast.error(err.response?.data?.message || err.message || 'Login failed')
+        console.error('Login error:', err.response?.data || err.message);
+        toast.error(err.response?.data?.message || err.message || 'Login failed');
     }
 }
-
-
 </script>
 
 
@@ -50,7 +52,7 @@ const handleLogin = async () => {
     <div class="min-h-screen grid grid-cols-1 md:grid-cols-2 ">
 
         <div class="hidden md:flex items-center justify-center">
-            <img :src="loginImage" alt="Login Illustration" class="w-3/4 max-w-md">
+            <Lottieplayer :animationData="loginAnimation" />
         </div>
 
 
@@ -101,6 +103,3 @@ const handleLogin = async () => {
         </div>
     </div>
 </template>
-
-
-

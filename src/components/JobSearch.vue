@@ -1,6 +1,15 @@
 <script setup>
-defineProps(['modelValue'])
-const emit = defineEmits(['update:modelValue'])
+import { watch } from 'vue'
+
+const props = defineProps(['modelValue'])
+const emit = defineEmits(['update:modelValue', 'clear-search'])
+
+
+watch(() => props.modelValue, (newVal) => {
+    if (newVal === '') {
+        emit('clear-search') 
+    }
+})
 </script>
 
 <template>
@@ -12,5 +21,3 @@ const emit = defineEmits(['update:modelValue'])
         </div>
     </div>
 </template>
-
-

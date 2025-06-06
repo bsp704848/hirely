@@ -35,4 +35,3 @@ const router = useRouter()
 </template>
 
 
-<style></style>

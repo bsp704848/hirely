@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '../stores/authStore'
-import RegisterPage from '../components/RegisterPage.vue'
-import LoginPage from '../components/LoginPage.vue'
+import RegisterPage from '../pages/RegisterPage.vue'
+import LoginPage from '../pages/LoginPage.vue'
 import EmployerDashboard from '../pages/EmployerDashboard.vue'
 import HomePage from '../pages/HomePage.vue'
 import JobForm from '../components/JobForm.vue'
@@ -9,7 +9,7 @@ import JobList from '../components/JobList.vue'
 import JobDetails from '../pages/JobDetails.vue'
 import AboutPage from '../pages/AboutPage.vue'
 import NotFoundPage from '../pages/NotFoundPage.vue'
-import EmployerJobListPage from '../pages/EmployerJobListPage.vue'
+import EmployerJobsPage from '../pages/EmployerJobsPage.vue'
 
 const routes = [
   { path: '/',name:'HomePage', component: HomePage  },
@@ -20,7 +20,8 @@ const routes = [
   { path: '/jobs',name: 'joblist', component: JobList },
   { path: '/job/:id', component: JobDetails , meta: { requiresAuth: true, role: 'employee' } },
   { path: '/about', component: AboutPage },
-  { path: '/employerjoblist/:id', component: EmployerJobListPage , meta: { requiresAuth: true, role: 'employer' }  },
+  { path: '/EmployerJobspage', component: EmployerJobsPage , meta: { requiresAuth: true, role: 'employer' }  },
+  { path: '/employerjob/:id', name: 'EmployerJob', component: () => import('../pages/EmployerJob.vue'), meta: { requiresAuth: true, role: 'employer' } },
   { path: '/:pathMatch(.*)*', component: NotFoundPage },
 
 ]
@@ -33,9 +34,18 @@ export const router = createRouter({
   }
 }) 
 
+let isUserFetched = false;
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async(to, from, next) => {
   const authStore = useAuthStore()
+  if (!isUserFetched) {
+    try {
+      await authStore.fetchUser(); 
+    } catch (error) {
+
+    }
+    isUserFetched = true;
+  }
   const isLoggedIn = authStore.isLoggedIn
   const role = authStore.role
 
@@ -45,11 +55,7 @@ router.beforeEach((to, from, next) => {
   }
 
   if ((to.path === '/login' || to.path === '/register') && isLoggedIn) {
-    if (role === 'employer') {
-      return next('/employer') 
-    } else {
-      return next('/') 
-    }
+    return next(role === 'employer' ? '/employer' : '/');
   }
 
  

@@ -12,7 +12,7 @@ defineProps({
 
 <template>
     <div
-        class="w-full max-w-[300px] flex flex-col space-y-2 px-4 py-3 border rounded-xl p-5 shadow-lg hover:shadow-2xl hover:scale-[1.02] transform transition-transform ease-in-out bg-white dark:bg-gray-900 dark:text-white">
+        class="w-full max-w-[300px] flex flex-col space-y-2 px-4 py-3 rounded-xl p-5 shadow-lg hover:shadow-2xl hover:scale-[1.02] transform transition-transform ease-in-sout bg-white dark:bg-gray-900 dark:text-white border-r-green-400 border-r-4 border-b-green-400 border-b-4">
 
 
 
@@ -21,8 +21,7 @@ defineProps({
                 <img v-if="image" :src="image" alt="icon" class="w-5 h-5 object-content" />
 
             </div>
-            <span class="font-medium text-sm text-gray-700 truncate"> Title : {{ title.length > 18 ? title.slice(0, 18)
-                + '...' : title }}</span>
+            <span class="font-medium text-sm text-gray-700 truncate"> Title : {{ title }}</span>
         </div>
 
 
