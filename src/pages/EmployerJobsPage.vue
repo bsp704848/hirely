@@ -14,7 +14,7 @@ const router = useRouter()
 const route = useRoute()
 const currentPage = ref(1)
 const debouncedQuery = ref('');
-const itemsPerPage = 2
+const itemsPerPage = 4
 
 
 const searchQuery = ref('')
@@ -160,10 +160,14 @@ function handleSearchChange(val) {
 
 <template>
     <div class="flex flex-col md:flex-row min-h-screen bg-gray-50 dark:bg-gray-800">
-        <!-- Sidebar Filters -->
+
         <aside
             class="w-full md:w-1/3 lg:w-1/4 p-4 md:p-6 bg-white dark:bg-gray-900 border-b md:border-b-0 md:border-r border-gray-200 dark:border-gray-700 flex-shrink-0">
-            <h2 class="font-bold mb-4 md:mb-6 text-center text-lg md:text-xl">All Filters</h2>
+            <h2
+                class="font-bold mb-4 md:mb-6 text-center text-lg md:text-xl bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
+                All Filters
+            </h2>
+
             <div class="space-y-4">
                 <JobSearch v-model="searchQuery" @update:modelValue="handleSearchChange" />
                 <SalaryFilter :salaryRange="selectedSalaryRange" @salary-changed="handleSalaryChange" />
@@ -175,14 +179,16 @@ function handleSearchChange(val) {
             </div>
         </aside>
 
-        <!-- Main Content -->
+
         <main class="flex-1 p-4 sm:p-6 lg:p-8">
             <div v-if="filteredJobs.length === 0" class="text-center text-gray-500 my-8 text-base md:text-lg">
                 No jobs found
             </div>
+
             <template v-else>
                 <EmployerJobs :jobs="paginatedJobs" @edit="handleEdit" @delete="handleDelete" />
             </template>
         </main>
     </div>
-</template>
+</template> 
+

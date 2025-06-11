@@ -10,6 +10,9 @@ import JobDetails from '../pages/JobDetails.vue'
 import AboutPage from '../pages/AboutPage.vue'
 import NotFoundPage from '../pages/NotFoundPage.vue'
 import EmployerJobsPage from '../pages/EmployerJobsPage.vue'
+import JobApplicationForm from '../components/JobApplicationForm.vue'
+import AppliedJobs from '../pages/AppliedJobs.vue'
+import EmployerApplications from '../pages/EmployerApplications.vue'
 
 const routes = [
   { path: '/',name:'HomePage', component: HomePage  },
@@ -22,6 +25,9 @@ const routes = [
   { path: '/about', component: AboutPage },
   { path: '/EmployerJobspage', component: EmployerJobsPage , meta: { requiresAuth: true, role: 'employer' }  },
   { path: '/employerjob/:id', name: 'EmployerJob', component: () => import('../pages/EmployerJob.vue'), meta: { requiresAuth: true, role: 'employer' } },
+  { path: '/apply/:id', name: 'JobApplication', component: JobApplicationForm },
+  { path: '/applied-jobs', name: 'AppliedJobs', component: AppliedJobs },
+  { path: '/applications', name: 'EmployerApplications', component: EmployerApplications },
   { path: '/:pathMatch(.*)*', component: NotFoundPage },
 
 ]

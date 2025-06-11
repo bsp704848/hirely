@@ -66,7 +66,8 @@ watch(
 
 <template>
     <div class="flex justify-center items-center gap-2 mt-6 flex-wrap">
-        <button class="px-3 py-1 rounded bg-green-400 text-white hover:bg-green-700 hover:font-bold"
+        <button
+            class="px-3 py-1 rounded bg-gradient-to-r from-green-500 to-green-700 hover:from-green-600 hover:to-green-800 text-white hover:font-bold"
             :disabled="currentPage === 1" @click="prevPage">
             Prev
         </button>
@@ -80,7 +81,8 @@ watch(
             {{ page }}
         </button>
 
-        <button class="px-3 py-1 rounded bg-green-400 text-white hover:bg-green-700 hover:font-bold"
+        <button
+            class="px-3 py-1 rounded bg-gradient-to-r from-green-500 to-green-700 hover:from-green-600 hover:to-green-800 text-white hover:font-bold"
             :disabled="currentPage === totalPages" @click="nextPage">
             Next
         </button>

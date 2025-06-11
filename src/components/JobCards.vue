@@ -34,10 +34,14 @@ const jobs = [
         <div class="text-center text-4xl font-bold mb-20">
             <p>Find your <span class="text-green-600">dream job now</span> </p>
         </div>
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 p-4 bg-white rounded-lg">
-            <div v-for="(job, index) in jobs" :key="index" @click="goToCategory(job.title)"
-                class="cursor-pointer hover:scale-105 transition-all duration-300">
-                <JobCard :image="job.image" :title="job.title" />
+        <div class="w-full bg-white rounded-lg flex justify-center p-2 sm:p-4 md:p-6">
+            <div class="w-full max-w-6xl">
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 px-2 sm:px-4 md:px-6 py-4">
+                    <div v-for="(job, index) in jobs" :key="index" @click="goToCategory(job.title)"
+                        class="cursor-pointer hover:scale-105 transition-all duration-300">
+                        <JobCard :image="job.image" :title="job.title" />
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -6,6 +6,7 @@ import Carousel from '../components/Carousel.vue'
 // import JobList from '../components/JobList.vue'
 import AboutPage from './AboutPage.vue'
 import HomeImage from '../assets/hero.webp'
+import Steps from '../components/Steps.vue'
 
 const router = useRouter()
 
@@ -18,7 +19,7 @@ const router = useRouter()
 
 
 <template>
-  <div>
+  <div >
     <Hero :image="HomeImage" />
     <JobCards />
     <Carousel />
@@ -29,7 +30,8 @@ const router = useRouter()
         class="bg-green-500 hover:bg-green-700 text-white px-6 py-2 rounded text-sm font-semibold">
         Find More Jobs
       </button>
-    </div> -->
+    </div> --> 
+    <Steps/>
     <AboutPage />
   </div>
 </template>

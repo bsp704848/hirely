@@ -1,7 +1,6 @@
 <script setup>
-import { useRoute } from 'vue-router'
+
 import { ref, onMounted } from 'vue'
-import { useAuthStore } from '../stores/authStore'
 const emit = defineEmits(['edit', 'delete'])
 
 const props = defineProps({
@@ -10,51 +9,35 @@ const props = defineProps({
         required: true
     }
 })
-
-const route = useRoute()
-const jobs = ref([])
 const isLoading = ref(true)
-const baseURL = import.meta.env.VITE_API_BASE_URL
 
-const authStore = useAuthStore()
-const employerId = authStore.user?.id
-
-onMounted(async () => {
-    try {
-        const res = await fetch(`${baseURL}/jobs?employerId=${employerId}`)
-        if (!res.ok) {
-            throw new Error(`Failed to fetch jobs for employer ID: ${employerId}`)
-        }
-        jobs.value = await res.json()
-    } catch (err) {
-        console.error('Error fetching jobs for employer:', err)
-    } finally {
-        isLoading.value = false
-    }
+onMounted(() => {
+  isLoading.value = false
 })
 
-console.log('Jobs for Employer:', jobs.value)
+
 </script>
 
 <template>
-    <div class="min-h-screen bg-gray-50 dark:bg-gray-800 py-10 px-4 sm:px-6 lg:px-8">
+    <div class="min-h-screen bg-gray-50 dark:bg-gray-800 py-6 px-4 sm:px-6 lg:px-8">
         <div v-if="isLoading" class="text-center">
             <p class="text-lg font-medium text-gray-700 dark:text-gray-300">Loading jobs...</p>
         </div>
         <div v-else-if="jobs.length > 0" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div v-for="job in props.jobs" :key="job.id"
-                class="bg-white dark:bg-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 rounded-2xl shadow-lg hover:shadow-xl transition-all transform hover:scale-[1.01] p-6">
+                class="bg-white dark:bg-gray-900 dark:text-white dark:border-gray-700 rounded-tl-3xl rounded-br-3xl shadow-lg hover:shadow-xl transition-all transform hover:scale-[1.02] p-6 border-r-8 border-b-8 border-t-2 border-l-2 border-transparent hover:border-sky-500 
+                ">
                 <h2 class="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">Job Title : {{ job.jobTitle }}</h2>
                 <p><span class="font-semibold text-gray-700 dark:text-gray-300">Category:</span> {{ job.jobCategory }}
                 </p>
                 <p><span class="font-semibold text-gray-700 dark:text-gray-300">Type:</span> {{ job.jobType }}</p>
                 <p><span class="font-semibold text-gray-700 dark:text-gray-300">Details:</span> {{ job.jobDetails }}</p>
                 <p><span class="font-semibold text-gray-700 dark:text-gray-300">Salary:</span> {{ job.salary.min }} - {{
-                    job.salary.max }}</p>
+                    job.salary.max }} &#8377; /month</p>
                 <p><span class="font-semibold text-gray-700 dark:text-gray-300">Experience:</span> {{ job.experience }}
                 </p>
                 <p><span class="font-semibold text-gray-700 dark:text-gray-300">Vacancy:</span> {{ job.vacancy }}</p>
-                <p><span class="font-semibold text-gray-700 dark:text-gray-300">Company Name:</span> {{
+                <p><span class="font-semibold text-gray-700 dark:text-gray-300">Employer Name:</span> {{
                     job.company.companyName }}</p>
                 <p><span class="font-semibold text-gray-700 dark:text-gray-300">Location:</span> {{ job.company.location
                     }}</p>

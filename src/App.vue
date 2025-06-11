@@ -37,7 +37,7 @@ watch(route, (newRoute) => {
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col">
+  <div class="min-h-screen flex flex-col ">
     <div v-if="isLoading" class="fixed inset-0 z-50 flex items-center justify-center">
       <Loader />
     </div>

@@ -4,9 +4,11 @@ import {
   createJob,
   getJobById,
   deleteJob,
-  updateJob 
+  updateJob,
+  getJobsByEmployer
 } from '../controllers/jobController.js';
 import authMiddleware from '../middleware/authMiddleware.js';
+import { getEmployerApplications } from '../controllers/applicationController.js';
 
 const router = express.Router();
 
@@ -24,6 +26,8 @@ router.get('/', getJobs);
 router.get('/:id', getJobById);       
 router.delete('/:id', deleteJob);  
 router.put('/:id', updateJob);   
+router.get('/employer/my-jobs', authMiddleware, getJobsByEmployer);
+router.get('/employer/applications', authMiddleware, getEmployerApplications);
 
 router.use(errorHandler);
 

@@ -48,7 +48,7 @@ const options = {
                     Empower your career journey with seamless registration, job matching, and employee management.
                 </p>
                 <RouterLink to="/register" v-if="showButton"
-                    class="inline-block bg-green-400 text-white font-semibold px-6 py-3 rounded-lg hover:bg-green-500 transition">
+                    class="inline-block bg-gradient-to-r from-green-500 to-green-700 hover:from-green-600 hover:to-green-800 text-white font-semibold px-6 py-3 rounded-lg  transition">
                     Get Started
                 </RouterLink>
             </div>

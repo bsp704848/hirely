@@ -7,7 +7,8 @@ const baseURL = import.meta.env.VITE_API_BASE_URL
 export const useJobStore = defineStore('jobStore', () => {
   const jobs = ref([])
   const selectedJob = ref(null)
-  const appliedJobs = ref(JSON.parse(localStorage.getItem('appliedJobs')) || [])
+  const appliedJobs = ref([]) 
+  const employerApplications = ref([])
   const isLoading = ref(false)
 
   async function fetchJobs(data) {
@@ -44,7 +45,7 @@ export const useJobStore = defineStore('jobStore', () => {
           withCredentials: true 
         }
       )
-      jobs.value.push(response.data.job)
+      jobs.value.unshift(response.data.job) // <-- Add new job at the top
       return response.data.job
     } catch (error) {
       console.error('Error saving job:', error)
@@ -87,11 +88,68 @@ export const useJobStore = defineStore('jobStore', () => {
           withCredentials: true
         }
       )
-      // handle response...
+
       return response.data
     } catch (error) {
       console.error('Error deleting job:', error)
       throw error
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  async function fetchEmployerJobs() {
+    try {
+      isLoading.value = true
+      const token = localStorage.getItem('token')
+      const response = await axios.get(
+        `${baseURL}/jobs/employer/my-jobs`,
+        {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+          withCredentials: true
+        }
+      )
+      jobs.value = response.data
+    } catch (error) {
+      console.error('Error fetching employer jobs:', error)
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  async function fetchAppliedJobs() {
+    try {
+      isLoading.value = true
+      const token = localStorage.getItem('token')
+      const response = await axios.get(
+        `${baseURL}/applications/my`,
+        {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+          withCredentials: true
+        }
+      )
+      appliedJobs.value = response.data.applications || []
+    } catch (error) {
+      console.error('Error fetching applied jobs:', error)
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  async function fetchEmployerApplications() {
+    try {
+      isLoading.value = true
+      const token = localStorage.getItem('token')
+      const response = await axios.get(
+        `${baseURL}/jobs/employer/applications`,
+        {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+          withCredentials: true
+        }
+      )
+      employerApplications.value = response.data.applications || []
+    } catch (error) {
+      console.error('Error fetching employer applications:', error)
     } finally {
       isLoading.value = false
     }
@@ -117,8 +175,12 @@ export const useJobStore = defineStore('jobStore', () => {
     selectedJob,
     setSelectedJob,
     appliedJobs,
+    employerApplications,
     applyForJob,
     fetchJobs,
+    fetchEmployerJobs,
+    fetchAppliedJobs, 
+    fetchEmployerApplications,
     isLoading,
     updateJob,
     deleteJob

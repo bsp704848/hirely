@@ -2,7 +2,7 @@ import Job from "../models/job.js";
 
 export async function getJobs(req, res) {
     try {
-        const jobs = await Job.find();
+        const jobs = await Job.find().sort({ postedAt: -1 });
         res.json(jobs);
     } catch (err) {
         res.status(500).json({ error: "Server error while fetching jobs" });
@@ -11,15 +11,59 @@ export async function getJobs(req, res) {
 
 export async function createJob(req, res) {
     try {
-        const newJob = new Job(req.body);
-        console.log('request...', req.body);
-        console.log('newJob...', newJob);
-        
+    
+        const {
+            jobCategory,
+            jobType,
+            jobTitle,
+            vacancy,
+            company
+        } = req.body;
 
-        if (!req.body.jobCategory || !req.body.jobType || !req.body.jobTitle || !req.body.company) {
+        if (
+            !jobCategory ||
+            !jobType ||
+            !jobTitle ||
+            !company ||
+            !company.companyName ||
+            !company.location ||
+            !company.contactEmail
+        ) {
             return res.status(400).json({ error: "Missing required fields" });
         }
 
+  
+        if (!/^[A-Za-z\s]+$/.test(jobTitle)) {
+            return res.status(400).json({ error: "Job title must contain only letters and spaces" });
+        }
+
+        if (!/^[A-Za-z\s]+$/.test(company.companyName)) {
+            return res.status(400).json({ error: "Company name must contain only letters and spaces" });
+        }
+
+      
+        if (!/^[A-Za-z\s]+$/.test(company.location)) {
+            return res.status(400).json({ error: "Location must contain only letters and spaces" });
+        }
+
+  
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(company.contactEmail)) {
+            return res.status(400).json({ error: "Invalid contact email address" });
+        }
+
+     
+        if (company.contactPhone && !/^[6-9]\d{9}$/.test(company.contactPhone)) {
+            return res.status(400).json({ error: "Contact phone must be a valid 10 digit number" });
+        }
+
+        if (vacancy && (isNaN(vacancy) || vacancy < 0)) {
+            return res.status(400).json({ error: "Vacancy must be a positive number" });
+        }
+
+        const newJob = new Job({
+            ...req.body,
+            createdBy: req.user._id
+        });
         await newJob.save();
         res.status(201).json({
             success: true,
@@ -67,5 +111,18 @@ export async function deleteJob(req, res) {
         res.json({ message: "Job deleted" });
     } catch (err) {
         res.status(500).json({ error: "Error deleting job" });
+    }
+}
+
+export async function getJobsByEmployer(req, res) {
+    try {
+        // Only allow if user is employer/admin
+        if (req.user.role !== 'employer') {
+            return res.status(403).json({ error: "Forbidden: Only employers can view their jobs" });
+        }
+        const jobs = await Job.find({ createdBy: req.user._id });
+        res.json(jobs);
+    } catch (err) {
+        res.status(500).json({ error: "Server error while fetching employer jobs" });
     }
 }

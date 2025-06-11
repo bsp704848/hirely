@@ -1,18 +1,20 @@
 <script setup>
 import { useJobStore } from '../stores/jobStore'
-import { onMounted, ref, computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { onMounted, ref, computed, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
 const baseURL = import.meta.env.VITE_API_BASE_URL
 const jobStore = useJobStore()
 const route = useRoute()
+const router = useRouter()
 
 const job = computed(() => jobStore.selectedJob)
 const showModal = ref(false)
 const applied = ref(false)
 
-onMounted(async () => {
-    const jobId = route.params.id
+const allJobs = ref([])
+
+const fetchJob = async (jobId) => {
     try {
         const res = await fetch(`${baseURL}/jobs/${jobId}`)
         if (!res.ok) throw new Error("Failed to fetch job")
@@ -21,93 +23,204 @@ onMounted(async () => {
     } catch (err) {
         console.error("Error fetching job:", err)
     }
+}
+
+onMounted(async () => {
+    await fetchJob(route.params.id)
+    try {
+        const res = await fetch(`${baseURL}/jobs`)
+        if (res.ok) {
+            allJobs.value = await res.json()
+        }
+    } catch (err) {
+        console.error("Error fetching all jobs:", err)
+    }
+})
+
+
+watch(() => route.params.id, async (newId) => {
+    await fetchJob(newId)
+})
+
+const relatedJobs = computed(() => {
+    if (!job.value) return []
+    return allJobs.value
+        .filter(j => j.jobCategory === job.value.jobCategory && j._id !== job.value._id)
+        .slice(0, 5)
 })
 
 const handleApply = () => {
-    applied.value = jobStore.applyForJob(jobStore.selectedJob)
-    showModal.value = true
+    router.push({ name: 'JobApplication', params: { id: job.value._id } })
+}
+
+const handleClick = (jobId) => {
+    router.push({ component: 'JobDetails', params: { id: jobId } })
 }
 </script>
 
 <template>
-    <div v-if="job" class="max-w-4xl mx-auto mt-6 px-4 sm:px-6 lg:px-8">
-        <!-- Job Header -->
-        <div class="bg-white dark:bg-gray-900 shadow-2xl rounded-2xl p-6 space-y-6 transition hover:scale-[1.01]">
-            <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white">
-                {{ job.jobTitle }}
-            </h2>
-
-            <!-- Job Details Section -->
+    <div class="max-w-7xl mx-auto mt-6 px-2 sm:px-4 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left: Job Details -->
+            <div class="lg:col-span-2">
+                <div v-if="job"
+                    class="bg-gradient-to-br from-green-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 shadow-2xl rounded-3xl p-6 sm:p-10 space-y-8 transition hover:scale-[1.01]">
+                    <h2
+                        class="text-3xl sm:text-4xl font-extrabold text-green-700 dark:text-green-300 break-words drop-shadow-lg">
+                        {{ job.jobTitle }}
+                    </h2>
+                    <!-- Job Details Section -->
+                    <div>
+                        <h3
+                            class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100 border-b-green-500 border-b-4 pb-2">
+                            Job Details
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-700 dark:text-gray-300 text-base">
+                            <p>
+                                <font-awesome-icon icon="info-circle" class="text-blue-600 mr-2" />
+                                <strong>Description:</strong>
+                                <span class="ml-1">{{ job.jobDetails }}</span>
+                            </p>
+                            <p>
+                                <font-awesome-icon icon="briefcase" class="text-blue-600 mr-2" />
+                                <strong>Category:</strong>
+                                <span class="ml-1">{{ job.jobCategory }}</span>
+                            </p>
+                            <p>
+                                <font-awesome-icon icon="clock" class="text-blue-600 mr-2" />
+                                <strong>Type:</strong>
+                                <span class="ml-1">{{ job.jobType }}</span>
+                            </p>
+                            <p>
+                                <font-awesome-icon icon="clock" class="text-blue-600 mr-2" />
+                                <strong>Experience:</strong>
+                                <span class="ml-1">{{ job.experience }}</span>
+                            </p>
+                            <p>
+                                <font-awesome-icon icon="money-bill" class="text-green-600 mr-2" />
+                                <strong>Salary:</strong>
+                                <span class="ml-1">
+                                    {{ job.salary && typeof job.salary === 'object'
+                                        ? `${job.salary.min.toLocaleString()} - ${job.salary.max.toLocaleString()} `
+                                        : job.salary }} &#8377; /month
+                                </span>
+                            </p>
+                            <p>
+                                <font-awesome-icon icon="users" class="text-purple-600 mr-2" />
+                                <strong>Vacancy:</strong>
+                                <span class="ml-1">{{ job.vacancy }}</span>
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Company Details Section -->
+                    <div class="mt-12">
+                        <h3
+                            class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100 border-b-green-500 border-b-4 pb-2">
+                            Employer Details
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-700 dark:text-gray-300 text-base">
+                            <p>
+                                <font-awesome-icon icon="building" class="text-yellow-600 mr-2" />
+                                <strong>Name:</strong>
+                                <span class="ml-1">{{ job.company.companyName }}</span>
+                            </p>
+                            <p>
+                                <font-awesome-icon icon="map-marker-alt" class="text-orange-500 mr-2" />
+                                <strong>Location:</strong>
+                                <span class="ml-1">{{ job.company.location }}</span>
+                            </p>
+                            <p>
+                                <font-awesome-icon icon="building" class="text-yellow-600 mr-2" />
+                                <strong>Details:</strong>
+                                <span class="ml-1">{{ job.company.companyDetails }}</span>
+                            </p>
+                            <p>
+                                <font-awesome-icon icon="envelope" class="text-red-500 mr-2" />
+                                <strong>Email:</strong>
+                                <span class="ml-1">{{ job.company.contactEmail }}</span>
+                            </p>
+                            <p>
+                                <font-awesome-icon icon="phone" class="text-green-500 mr-2" />
+                                <strong>Contact:</strong>
+                                <span class="ml-1">{{ job.company.contactPhone }}</span>
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Apply Button -->
+                    <div class="flex justify-end mt-8">
+                        <button @click="handleApply"
+                            class="bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white font-bold px-8 py-3 rounded-full shadow-xl transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300">
+                            <font-awesome-icon icon="check-circle" class="mr-2" />Apply Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- Right: Related Jobs -->
             <div>
-                <h3
-                    class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100 border-b-green-500 border-b-4 pb-2">
-                    Job Details</h3>
-                <div class="grid md:grid-cols-2 gap-6 text-gray-700 dark:text-gray-300 text-base">
-                    <p><font-awesome-icon icon="info-circle" class="text-blue-600 mr-2" /> <strong>Description:</strong>
-                        {{ job.jobDetails }}</p>
-                    <p><font-awesome-icon icon="briefcase" class="text-blue-600 mr-2" /> <strong>Category:</strong> {{
-                        job.jobCategory }}</p>
-                    <p><font-awesome-icon icon="clock" class="text-blue-600 mr-2" /> <strong>Type:</strong> {{
-                        job.jobType }}</p>
-                    <p><font-awesome-icon icon="clock" class="text-blue-600 mr-2" /> <strong>Experience:</strong> {{
-                        job.experience }}</p>
-                    <p>
-                        <font-awesome-icon icon="money-bill" class="text-green-600 mr-2" />
-                        <strong>Salary:</strong>
-                        {{ job.salary && typeof job.salary === 'object'
-                        ? `${job.salary.min.toLocaleString()} - ${job.salary.max.toLocaleString()}`
-                        : job.salary }}
-                    </p>
-                    <p><font-awesome-icon icon="users" class="text-purple-600 mr-2" /> <strong>Vacancy:</strong> {{
-                        job.vacancy }}</p>
+                <div
+                    class="bg-gradient-to-br from-white via-green-50 to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 shadow-xl rounded-3xl p-4 sm:p-6">
+                    <h3 class="text-xl font-bold mb-4 text-gray-900 dark:text-white text-center">Related Jobs</h3>
+                    <div v-if="relatedJobs.length" class="grid gap-4">
+                        <div v-for="related in relatedJobs" :key="related._id"
+                            class="border border-green-200 dark:border-green-700 rounded-2xl p-4 hover:shadow-2xl hover:border-blue-400 dark:hover:border-blue-400 transition cursor-pointer flex flex-col gap-2 bg-white dark:bg-gray-900 group"
+                            @click="handleClick(related._id)">
+                            <h4
+                                class="font-semibold text-lg text-green-700 dark:text-green-400 truncate group-hover:underline">
+                                {{ related.jobTitle }}
+                            </h4>
+                            <p class="text-gray-600 dark:text-gray-300 text-sm truncate">
+                                {{ related.company?.companyName }}
+                            </p>
+                            <p class="text-gray-600 dark:text-gray-300 text-sm">
+                                {{ related.salary && typeof related.salary === 'object'
+                                    ? `${related.salary.min.toLocaleString()} - ${related.salary.max.toLocaleString()} `
+                                    : related.salary }} &#8377; /month
+                            </p>
+                            <p class="text-gray-500 dark:text-gray-400 text-xs">
+                                {{ related.jobType }} | {{ related.company?.location }}
+                            </p>
+                            <button @click.stop="handleClick(related._id)"
+                                class="mt-2 bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white px-4 py-1 rounded-full shadow transition font-semibold self-end">
+                                Details
+                            </button>
+                        </div>
+                    </div>
+                    <div v-else class="text-gray-500 dark:text-gray-400 text-center py-8">
+                        No related jobs found.
+                    </div>
                 </div>
-            </div>
-
-            <!-- Company Details Section -->
-            <div class="mt-16">
-                <h3
-                    class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100 border-b-green-500 border-b-4 pb-2">
-                    Company Details
-                </h3>
-                <div class="grid md:grid-cols-2 gap-6 text-gray-700 dark:text-gray-300 text-base">
-                    <p><font-awesome-icon icon="building" class="text-yellow-600 mr-2" /> <strong>Name:</strong> {{
-                        job.company.companyName }}</p>
-                    <p><font-awesome-icon icon="map-marker-alt" class="text-orange-500 mr-2" />
-                        <strong>Location:</strong> {{ job.company.location }}
-                    </p>
-                    <p><font-awesome-icon icon="building" class="text-yellow-600 mr-2" /> <strong>Details:</strong> {{
-                        job.company.companyDetails }}</p>
-                    <p><font-awesome-icon icon="envelope" class="text-red-500 mr-2" /> <strong>Email:</strong> {{
-                        job.company.contactEmail }}</p>
-                    <p><font-awesome-icon icon="phone" class="text-green-500 mr-2" /> <strong>Contact:</strong> {{
-                        job.company.contactPhone }}</p>
-                </div>
-            </div>
-
-            <!-- Apply Button -->
-            <div class="text-right mt-8">
-                <button @click="handleApply"
-                    class="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded-full shadow-md transition duration-300">
-                    <font-awesome-icon icon="check-circle" class="mr-2" />Apply Now
-                </button>
             </div>
         </div>
     </div>
-
     <!-- Modal -->
-    <div v-if="showModal" class="fixed inset-0 bg-white bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-xl max-w-md w-full text-center space-y-4">
+    <div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+        <div
+            class="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-2xl max-w-md w-full text-center space-y-4 border-2 border-green-200 dark:border-green-700">
             <h2 :class="applied ? 'text-green-600' : 'text-red-600'" class="text-2xl font-bold">
                 {{ applied ? 'Congratulations!' : 'Already Applied' }}
             </h2>
             <p class="text-gray-700 dark:text-gray-300">
                 {{ applied ? 'Your application has been submitted. The employer will contact you shortly.' :
-                'You have already applied for this job.' }}
+                    'You have already applied for this job.' }}
             </p>
             <button @click="showModal = false"
-                class="mt-4 bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg transition">
+                class="mt-4 bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white px-6 py-2 rounded-full shadow-lg transition font-bold">
                 OK
             </button>
         </div>
     </div>
 </template>
+
+<style scoped>
+/* Responsive tweaks for best look */
+@media (max-width: 640px) {
+    .rounded-3xl {
+        border-radius: 1.25rem !important;
+    }
+
+    .p-6,
+    .sm\:p-10 {
+        padding: 1.25rem !important;
+    }
+}
+</style>
