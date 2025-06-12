@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import axios from 'axios'
+import socket from '../socket' 
 
 const baseURL = import.meta.env.VITE_API_BASE_URL
 
@@ -169,15 +170,58 @@ export const useJobStore = defineStore('jobStore', () => {
     return false
   }
 
-  async function updateApplicationStatus(applicationId, newStatus) {
+  async function updateApplicationStatus(application, newStatus) {
+    try {
+      isLoading.value = true
+      const token = localStorage.getItem('token')
    
-    const response = await api.updateStatus(applicationId, newStatus);
- 
-    const idx = this.appliedJobs.findIndex(app => app._id === applicationId);
-    if (idx !== -1) {
-        this.appliedJobs[idx].status = newStatus;
+      const response = await axios.put(
+        `${baseURL}/applications/${application._id}/status`,
+        { status: newStatus },
+        {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+          withCredentials: true
+        }
+      )
+      
+      const updatedApp = response.data.application || { ...application, status: newStatus }
+
+      
+      const idx = employerApplications.value.findIndex(app => app._id === application._id)
+      if (idx !== -1) {
+        employerApplications.value.splice(idx, 1, updatedApp)
+      }
+    
+      const idx2 = appliedJobs.value.findIndex(app => app._id === application._id)
+      if (idx2 !== -1) {
+        appliedJobs.value.splice(idx2, 1, updatedApp)
+      }
+
+
+      console.log('employerApplications', employerApplications.value)
+      console.log('appliedJobs', appliedJobs.value)
+      
+      return response.data
+    } catch (error) {
+      console.error('Error updating application status:', error)
+      throw error
+    } finally {
+      isLoading.value = false
     }
-}
+  }
+
+  socket.on('applicationStatusUpdated', (updatedApp) => {
+    // Update employerApplications
+    const idx = employerApplications.value.findIndex(app => app._id === updatedApp._id)
+    if (idx !== -1) {
+      employerApplications.value.splice(idx, 1, updatedApp)
+    }
+    // Update appliedJobs
+    const idx2 = appliedJobs.value.findIndex(app => app._id === updatedApp._id)
+    if (idx2 !== -1) {
+      appliedJobs.value.splice(idx2, 1, updatedApp)
+    }
+  })
 
   return {
     jobs,

@@ -8,6 +8,8 @@ import { useToast } from 'vue-toastification'
 import Lottieplayer from './LottiePlayer.vue'
 import applicationAnimation from '../assets/jobapplication.json'
 
+const baseURL = import.meta.env.VITE_API_BASE_URL
+
 const applicationStore = useApplicationStore()
 const authStore = useAuthStore()
 const jobStore = useJobStore()
@@ -39,7 +41,7 @@ function handleFile(e) {
 onMounted(async () => {
     if (!jobStore.selectedJob && route.params.id) {
         try {
-            const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/jobs/${route.params.id}`)
+            const res = await fetch(`${baseURL}/jobs/${route.params.id}`)
             if (res.ok) {
                 const data = await res.json()
                 jobStore.setSelectedJob(data)

@@ -12,7 +12,7 @@ const isEmployer = computed(() => authStore.role === 'employer')
 const showDropdown = ref(false)
 const router = useRouter()
 const route = useRoute()
-const applicationsCount = computed(() => jobStore.employerApplications?.length || 0)
+
 
 const logout = () => {
     authStore.logout()
@@ -90,9 +90,6 @@ const isActive = (path) => {
                         to="/applications" class="p-2 rounded transition-colors flex items-center gap-1"
                         :class="isActive('/applications') ? 'bg-green-300 text-green-800 font-semibold' : 'hover:text-gray-800 hover:bg-green-300'">
                         Applications
-                        <span v-if="applicationsCount" class="ml-1 bg-green-500 text-white rounded-full px-2 text-xs">
-                            {{ applicationsCount }}
-                        </span>
                     </RouterLink>
                     <!-- Post Job -->
                     <RouterLink v-if="authStore.role === 'employer' && route.path !== '/addjob'" to="/addjob"

@@ -12,9 +12,9 @@ import { faEdit,faCalendarWeek, faInfoCircle, faBriefcase, faClock, faMoneyBill,
     faBuilding, faEnvelope, faPhone, faMapMarkerAlt, faCheckCircle ,faTrash, faPlus, faSave, faArrowUp, faBars, faXmark,faLocationDot,faList,faIndianRupee, faFontAwesomeFlag ,} from '@fortawesome/free-solid-svg-icons'
 import vuetify from './plugins/vuetify'
 
-
 library.add(faEdit, faTrash, faInfoCircle, faBriefcase,faCalendarWeek, faClock, faMoneyBill, faUsers,
     faBuilding, faEnvelope, faPhone, faMapMarkerAlt, faCheckCircle,faPlus,faSave, faArrowUp,faBars,faXmark,faLocationDot,faList,faIndianRupee,faFontAwesomeFlag)
+
 const app = createApp(App)
 const pinia = createPinia()
 app.use(pinia)
