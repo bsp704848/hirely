@@ -169,6 +169,16 @@ export const useJobStore = defineStore('jobStore', () => {
     return false
   }
 
+  async function updateApplicationStatus(applicationId, newStatus) {
+   
+    const response = await api.updateStatus(applicationId, newStatus);
+ 
+    const idx = this.appliedJobs.findIndex(app => app._id === applicationId);
+    if (idx !== -1) {
+        this.appliedJobs[idx].status = newStatus;
+    }
+}
+
   return {
     jobs,
     saveJob,
@@ -183,6 +193,7 @@ export const useJobStore = defineStore('jobStore', () => {
     fetchEmployerApplications,
     isLoading,
     updateJob,
-    deleteJob
+    deleteJob,
+    updateApplicationStatus
   }
 })

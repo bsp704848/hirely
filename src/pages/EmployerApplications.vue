@@ -16,21 +16,8 @@ onMounted(async () => {
     console.log('Employer applications fetched:', jobStore.employerApplications)
 })
 
-async function updateStatus(app) {
-    try {
-        await axios.patch(
-            `${baseURL}/applications/status/${app._id}`,
-            { status: app.status },
-            {
-                headers: {
-                    Authorization: `Bearer ${userStore.token}`,
-                },
-            }
-        )
-        await jobStore.fetchEmployerApplications()
-    } catch (err) {
-        alert('Failed to update status')
-    }
+const changeStatus = async (applicationId, newStatus) => {
+    await jobStore.updateApplicationStatus(applicationId, newStatus)
 }
 </script>
 
@@ -96,7 +83,7 @@ async function updateStatus(app) {
                                     app.status === 'selected' ? 'bg-green-500' :
                                         app.status === 'rejected' ? 'bg-red-400' : 'bg-gray-300'
                         ]" aria-hidden="true"></span>
-                        <select v-model="app.status" @change="updateStatus(app)"
+                        <select v-model="app.status" @change="changeStatus(app)"
                             class="rounded-lg border-2 border-green-300 dark:border-green-700 bg-white dark:bg-gray-800 px-4 py-2 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-400 transition font-semibold shadow-sm">
                             <option value="applied">Applied</option>
                             <option value="interview">Interview</option>
