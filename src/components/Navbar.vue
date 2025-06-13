@@ -109,7 +109,7 @@ const isActive = (path) => {
                             <div v-if="showDropdown"
                                 class="absolute mt-2 bg-white border rounded shadow p-2 text-sm z-50 w-40">
                                 <p class="text-gray-600">Role : <span class="font-medium text-green-500 capitalize">{{
-                                    authStore.role }}</span></p>
+                                        authStore.role }}</span></p>
                                 <button @click="logout" class="text-red-600 hover:underline">Logout</button>
                             </div>
                         </div>
@@ -135,6 +135,12 @@ const isActive = (path) => {
             </RouterLink>
             <RouterLink :to="isEmployer ? '/EmployerJobspage' : '/jobs'" class="block p-2 rounded-lg border border-green-200 bg-green-50 text-green-800 font-semibold shadow transition-all duration-200
                     hover:bg-green-300 hover:text-green-900 hover:scale-105" @click="isMenuOpen = false">Jobs
+            </RouterLink>
+
+            <RouterLink v-if="authStore.role === 'employer' && route.path !== '/applications'" to="/applications"
+                class="block p-2 rounded-lg border border-green-200 bg-green-50 text-green-800 font-semibold shadow transition-all duration-200
+                hover:bg-green-300 hover:text-green-900 hover:scale-105" @click="isMenuOpen = false">
+                Applications
             </RouterLink>
 
             <RouterLink v-if="authStore.role === 'employee'" to="/applied-jobs" class="block p-2 rounded-lg border border-green-200 bg-green-50 text-green-800 font-semibold shadow transition-all duration-200
