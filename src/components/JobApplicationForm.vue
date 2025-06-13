@@ -61,7 +61,7 @@ watch(
     () => jobStore.selectedJob,
     (job) => {
         if (job) {
-            form.value.position = job._id || '' // <-- FIXED: use job._id
+            form.value.position = job._id || ''
             form.value.employerName = job.company?.companyName || ''
         } else {
             form.value.position = ''
@@ -79,10 +79,10 @@ const errors = ref({
     state: '',
     email: '',
     zip: '',
-    birthdate: '', // <-- add this
+    birthdate: '',
 })
 
-// Helper to check if user is 18+
+
 function isAtLeast18(birthdate) {
     if (!birthdate) return false
     const today = new Date()
@@ -105,7 +105,7 @@ function validateBirthdate(e) {
 }
 
 const phonePattern = /^\d{10}$/
-const zipPattern = /^[1-9][0-9]{5}$/ // Indian PIN code: 6 digits, not starting with 0
+const zipPattern = /^[1-9][0-9]{5}$/
 
 
 function validatePhone(e) {
@@ -150,7 +150,7 @@ function validateZip(e) {
 }
 
 async function submitForm() {
-    // Validate birthdate before submit
+
     if (!isAtLeast18(form.value.birthdate)) {
         errors.value.birthdate = 'You must be at least 18 years old to apply.'
         toast.error(errors.value.birthdate)
@@ -193,20 +193,21 @@ async function submitForm() {
 
             <div
                 class="flex flex-col justify-center items-center w-full lg:w-[48%] bg-gradient-to-br from-green-100 via-white to-green-100 p-8 lg:p-12">
+                <div class="flex justify-center items-center w-full mb-6">
+                </div>
                 <h2 class="text-3xl md:text-4xl font-extrabold mb-4 text-gray-900 text-center leading-tight">
-                    <div class="w-full max-w-xs sm:max-w-sm md:max-w-md">
-                        <Lottieplayer :animationData="applicationAnimation" />
-                    </div>
                     <span class="text-green-500">Create</span> Your Application
                 </h2>
                 <p class="text-gray-600 mb-8 text-lg text-center max-w-md">
                     Fill out the form to apply for a new job listing. Provide details like full name, email, position,
                     and employer.
                 </p>
+                <div class="mx-auto w-full lottie-center" style="max-width: 320px;">
+                    <Lottieplayer :animationData="applicationAnimation" />
+                </div>
             </div>
 
-            <!-- <div class="hidden lg:block w-px bg-gradient-to-b from-green-50 via-green-100 to-green-300 my-12"></div> -->
-            <!-- Right: Form -->
+
             <div class="flex flex-col justify-center w-full lg:w-[52%] p-6 sm:p-10">
                 <form @submit.prevent="submitForm" class="w-full max-w-3xl mx-auto  p-4 sm:p-6 md:p-8 space-y-6 ">
                     <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white text-center">
@@ -334,3 +335,17 @@ async function submitForm() {
         </div>
     </section>
 </template>
+
+<style scoped>
+@media (max-width: 640px) {
+    .lottie-center {
+        margin-left: auto !important;
+        margin-right: auto !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        width: 100% !important;
+        max-width: 320px !important;
+    }
+}
+</style>

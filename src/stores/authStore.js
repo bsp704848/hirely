@@ -78,6 +78,7 @@ export const useAuthStore = defineStore('auth', {
             this.role = '';
             localStorage.removeItem('user');
             localStorage.removeItem('role');
+            localStorage.removeItem('token'); 
             document.cookie = 'token=; Max-Age=0; Path=/; SameSite=Lax';
         },
 

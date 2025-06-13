@@ -16,8 +16,24 @@ const form = ref({
 })
 
 const showPassword = ref(false)
+const errorMessage = ref('')
+
+const validateEmail = (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return re.test(email)
+}
 
 const handleLogin = async () => {
+    // Frontend validation
+    if (!form.value.email || !form.value.password) {
+        errorMessage.value = 'Please fill in all fields'
+        return
+    }
+    if (!validateEmail(form.value.email)) {
+        errorMessage.value = 'Please enter a valid email'
+        return
+    }
+    errorMessage.value = ''
     try {
         console.log('Login form data:', form.value)
         await authStore.login(form.value);
@@ -60,6 +76,7 @@ const handleLogin = async () => {
             <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
                 <h2 class="text-2xl font-bold mb-6 text-center">Login</h2>
                 <form @submit.prevent="handleLogin" class="space-y-5">
+                    <p v-if="errorMessage" class="text-red-500 text-center text-sm">{{ errorMessage }}</p>
 
                     <div>
                         <label class="block mb-1 font-medium">Email</label>
@@ -78,7 +95,6 @@ const handleLogin = async () => {
                             class="absolute right-5 top-10 text-gray-500 cursor-pointer"
                             @click="showPassword = !showPassword"></i>
                     </div>
-
 
                     <p class="text-center text-sm">
                         New to Hirely?

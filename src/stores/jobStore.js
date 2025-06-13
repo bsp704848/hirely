@@ -46,7 +46,7 @@ export const useJobStore = defineStore('jobStore', () => {
           withCredentials: true 
         }
       )
-      jobs.value.unshift(response.data.job) // <-- Add new job at the top
+      jobs.value.unshift(response.data.job) 
       return response.data.job
     } catch (error) {
       console.error('Error saving job:', error)

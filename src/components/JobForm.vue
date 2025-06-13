@@ -213,12 +213,8 @@ function validateTextInput(e, field) {
         <div
             class="flex flex-col lg:flex-row items-stretch max-w-full w-full mx-auto  backdrop-blur-lg overflow-hidden">
 
-            <!-- Left: Animation & Intro -->
             <div
                 class="flex flex-col justify-center items-center w-full lg:w-[48%] bg-gradient-to-br from-green-100 via-white to-green-100 p-8 lg:p-12">
-                <div class="w-full max-w-xs sm:max-w-sm md:max-w-md">
-                    <Lottieplayer :animationData="postJobAnimation" />
-                </div>
                 <h2 class="text-3xl md:text-4xl font-extrabold mb-4 text-gray-900 text-center leading-tight">
                     <span class="text-green-500">Post</span> Your Job
                 </h2>
@@ -226,11 +222,14 @@ function validateTextInput(e, field) {
                     Fill out the form to add a new job listing. Provide details like job type, description, salary and
                     company info.
                 </p>
+                <div class="flex justify-center items-center w-full mb-6">
+                    <div class="lottie-center">
+                        <Lottieplayer :animationData="postJobAnimation" />
+                    </div>
+                </div>
             </div>
 
-            <!-- <div class="hidden lg:block w-px bg-gradient-to-b from-green-200 via-green-100 to-green-200 my-12"></div> -->
 
-            <!-- Right: Form -->
             <div class="flex flex-col justify-center w-full lg:w-[52%] p-6 sm:p-10">
                 <form @submit.prevent="handleSubmit" class="w-full max-w-3xl mx-auto  p-4 sm:p-6 md:p-8 space-y-6 ">
 
@@ -363,3 +362,15 @@ function validateTextInput(e, field) {
         </div>
     </section>
 </template>
+
+<style scoped>
+.lottie-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 320px;
+    margin-left: auto;
+    margin-right: auto;
+}
+</style>

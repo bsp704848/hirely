@@ -24,7 +24,10 @@ const selectedExperience = ref('All')
 
 async function fetchJobs() {
     try {
-        const res = await fetch(`${baseURL}/jobs`)
+        const token = localStorage.getItem('token')
+        const res = await fetch(`${baseURL}/jobs/employer/my-jobs`, {
+            headers: token ? { Authorization: `Bearer ${token}` } : {}
+        })
         const data = await res.json()
         if (Array.isArray(data)) {
             jobs.value = data || []
@@ -181,8 +184,13 @@ function handleSearchChange(val) {
 
 
         <main class="flex-1 p-4 sm:p-6 lg:p-8">
-            <div v-if="filteredJobs.length === 0" class="text-center text-gray-500 my-8 text-base md:text-lg">
+            <div v-if="filteredJobs.length === 0"
+                class="text-center text-gray-500 my-8 text-base md:text-lg flex flex-col items-center gap-6">
                 No jobs found
+                <button @click="router.push('/addjob')"
+                    class="mt-2 px-6 py-3 rounded-lg bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 text-white font-semibold shadow-lg hover:scale-105 transition-transform duration-200">
+                    + Post Your First Job
+                </button>
             </div>
 
             <template v-else>
@@ -190,5 +198,4 @@ function handleSearchChange(val) {
             </template>
         </main>
     </div>
-</template> 
-
+</template>

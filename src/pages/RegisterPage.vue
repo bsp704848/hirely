@@ -22,15 +22,33 @@ const showPassword = ref(false)
 const showConfirmPassword = ref(false)
 const errorMessage = ref('')
 
+const validateEmail = (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return re.test(email)
+}
+
+const validatePassword = (password) => {
+    // At least 8 chars, one uppercase, one lowercase, one number, one special char
+    const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+    return re.test(password);
+}
+
 const handleSubmit = async () => {
     if (!form.value.username || !form.value.email || !form.value.password || !form.value.confirmPassword || !form.value.role) {
-        errorMessage.value = 'Please fill in all fields';
-        return;
+        errorMessage.value = 'Please fill in all fields'
+        return
     }
-
+    if (!validateEmail(form.value.email)) {
+        errorMessage.value = 'Please enter a valid email'
+        return
+    }
+    if (!validatePassword(form.value.password)) {
+        errorMessage.value = 'Password must be at least 8 characters, include uppercase, lowercase, number, and special character'
+        return
+    }
     if (form.value.password !== form.value.confirmPassword) {
-        errorMessage.value = 'Passwords do not match';
-        return;
+        errorMessage.value = 'Passwords do not match'
+        return
     }
     errorMessage.value = '';
 
