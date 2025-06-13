@@ -39,7 +39,7 @@ const appliedJobs = computed(() => jobStore.appliedJobs)
                         <p class="text-gray-700 dark:text-gray-200 font-semibold">
                             <span class="text-yellow-500 font-bold">Applied:</span>
                             <span class="ml-1 font-medium">{{ new Date(application.createdAt).toLocaleDateString()
-                            }}</span>
+                                }}</span>
                         </p>
                     </div>
                 </div>

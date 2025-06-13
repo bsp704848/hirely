@@ -1,11 +1,9 @@
 <script setup>
 import { onMounted } from 'vue'
 import { useJobStore } from '../stores/jobStore'
-import axios from 'axios'
-import { useUserStore } from '../stores/userStore'
+
 
 const jobStore = useJobStore()
-const userStore = useUserStore()
 const isLoading = jobStore.isLoading
 
 const baseURL = import.meta.env.VITE_API_BASE_URL

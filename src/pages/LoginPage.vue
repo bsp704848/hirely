@@ -24,7 +24,7 @@ const validateEmail = (email) => {
 }
 
 const handleLogin = async () => {
-    // Frontend validation
+
     if (!form.value.email || !form.value.password) {
         errorMessage.value = 'Please fill in all fields'
         return

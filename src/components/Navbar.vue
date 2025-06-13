@@ -67,31 +67,31 @@ const isActive = (path) => {
 
             <div class="hidden md:flex items-center gap-8">
                 <div class="flex items-center gap-6 text-base font-medium">
-                    <!-- Home -->
+                   
                     <RouterLink v-if="!(isEmployer ? route.path === '/employer' : route.path === '/')"
                         :to="isEmployer ? '/employer' : '/'" class="p-2 rounded transition-colors"
                         :class="isActive(isEmployer ? '/employer' : '/') ? 'bg-green-300 text-green-800 font-semibold' : ''">
                         Home
                     </RouterLink>
-                    <!-- Jobs -->
+                  
                     <RouterLink v-if="route.path !== (isEmployer ? '/EmployerJobspage' : '/jobs')"
                         :to="isEmployer ? '/EmployerJobspage' : '/jobs'" class="p-2 rounded transition-colors"
                         :class="isActive(isEmployer ? '/EmployerJobspage' : '/jobs') ? 'bg-green-300 text-green-800 font-semibold' : 'hover:text-gray-800 hover:bg-green-300'">
                         Jobs
                     </RouterLink>
-                    <!-- Applied Jobs -->
+                 
                     <RouterLink v-if="authStore.role === 'employee' && route.path !== '/applied-jobs'"
                         to="/applied-jobs" class="p-2 rounded transition-colors"
                         :class="isActive('/applied-jobs') ? 'bg-green-300 text-green-800 font-semibold' : 'hover:text-gray-800 hover:bg-green-300'">
                         Applied Jobs
                     </RouterLink>
-                    <!-- Applications -->
+                
                     <RouterLink v-if="authStore.role === 'employer' && route.path !== '/applications'"
                         to="/applications" class="p-2 rounded transition-colors flex items-center gap-1"
                         :class="isActive('/applications') ? 'bg-green-300 text-green-800 font-semibold' : 'hover:text-gray-800 hover:bg-green-300'">
                         Applications
                     </RouterLink>
-                    <!-- Post Job -->
+                
                     <RouterLink v-if="authStore.role === 'employer' && route.path !== '/addjob'" to="/addjob"
                         class="p-2 rounded transition-colors"
                         :class="isActive('/addjob') ? 'bg-green-300 text-green-800 font-semibold' : 'hover:text-gray-800 hover:bg-green-300'">
@@ -118,7 +118,7 @@ const isActive = (path) => {
                         <RouterLink to="/login" class="text-green-600 hover:underline">Login</RouterLink>
                         <RouterLink to="/register" class="text-green-600 hover:underline">Register</RouterLink>
                     </template>
-                    <!-- About -->
+               
                     <RouterLink v-if="route.path !== '/about'" to="/about" :class="[
                         'p-2 rounded transition-colors font-semibold',
                         isActive('/about') ? 'bg-green-300 text-green-800 font-bold' : 'hover:text-gray-800 hover:bg-green-300'

@@ -28,7 +28,7 @@ const validateEmail = (email) => {
 }
 
 const validatePassword = (password) => {
-    // At least 8 chars, one uppercase, one lowercase, one number, one special char
+
     const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
     return re.test(password);
 }

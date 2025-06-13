@@ -61,7 +61,7 @@ const handleClick = (jobId) => {
 <template>
     <div class="max-w-7xl mx-auto mt-6 px-2 sm:px-4 lg:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Left: Job Details -->
+
             <div class="lg:col-span-2">
                 <div v-if="job"
                     class="bg-gradient-to-br from-green-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 shadow-2xl rounded-3xl p-6 sm:p-10 space-y-8 transition hover:scale-[1.01]">
@@ -69,7 +69,7 @@ const handleClick = (jobId) => {
                         class="text-3xl sm:text-4xl font-extrabold text-green-700 dark:text-green-300 break-words drop-shadow-lg">
                         {{ job.jobTitle }}
                     </h2>
-                    <!-- Job Details Section -->
+
                     <div>
                         <h3
                             class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100 border-b-green-500 border-b-4 pb-2">
@@ -112,7 +112,7 @@ const handleClick = (jobId) => {
                             </p>
                         </div>
                     </div>
-                    <!-- Company Details Section -->
+
                     <div class="mt-12">
                         <h3
                             class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100 border-b-green-500 border-b-4 pb-2">
@@ -146,7 +146,7 @@ const handleClick = (jobId) => {
                             </p>
                         </div>
                     </div>
-                    <!-- Apply Button -->
+
                     <div class="flex justify-end mt-8">
                         <button @click="handleApply"
                             class="bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white font-bold px-8 py-3 rounded-full shadow-xl transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300">
@@ -155,7 +155,7 @@ const handleClick = (jobId) => {
                     </div>
                 </div>
             </div>
-            <!-- Right: Related Jobs -->
+
             <div>
                 <div
                     class="bg-gradient-to-br from-white via-green-50 to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 shadow-xl rounded-3xl p-4 sm:p-6">
@@ -192,7 +192,7 @@ const handleClick = (jobId) => {
             </div>
         </div>
     </div>
-    <!-- Modal -->
+
     <div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
         <div
             class="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-2xl max-w-md w-full text-center space-y-4 border-2 border-green-200 dark:border-green-700">
@@ -212,7 +212,6 @@ const handleClick = (jobId) => {
 </template>
 
 <style scoped>
-/* Responsive tweaks for best look */
 @media (max-width: 640px) {
     .rounded-3xl {
         border-radius: 1.25rem !important;

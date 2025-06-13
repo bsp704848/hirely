@@ -211,12 +211,12 @@ export const useJobStore = defineStore('jobStore', () => {
   }
 
   socket.on('applicationStatusUpdated', (updatedApp) => {
-    // Update employerApplications
+  
     const idx = employerApplications.value.findIndex(app => app._id === updatedApp._id)
     if (idx !== -1) {
       employerApplications.value.splice(idx, 1, updatedApp)
     }
-    // Update appliedJobs
+    
     const idx2 = appliedJobs.value.findIndex(app => app._id === updatedApp._id)
     if (idx2 !== -1) {
       appliedJobs.value.splice(idx2, 1, updatedApp)
