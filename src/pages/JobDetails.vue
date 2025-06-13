@@ -51,6 +51,7 @@ const relatedJobs = computed(() => {
 
 const handleApply = () => {
     router.push({ name: 'JobApplication', params: { id: job.value._id } })
+    
 }
 
 const handleClick = (jobId) => {
