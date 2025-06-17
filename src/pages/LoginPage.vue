@@ -8,6 +8,7 @@ import loginImage from '../assets/signin.svg'
 const router = useRouter()
 const toast = useToast()
 const authStore = useAuthStore()
+const baseURL = import.meta.env.VITE_API_BASE_URL
 
 const form = ref({
     email: '',
@@ -62,7 +63,7 @@ const handleLogin = async () => {
 }
 
 const handleGoogleLogin = () => {
-    window.location.href = "https://hirely-backend.onrender.com/api/auth/google";
+    window.location.href = `${baseURL}/auth/google`;
 
 };
 

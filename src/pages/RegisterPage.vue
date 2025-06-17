@@ -16,6 +16,7 @@ const form = ref({
 const authStore = useAuthStore()
 const router = useRouter()
 const toast = useToast()
+const baseURL = import.meta.env.VITE_API_BASE_URL
 
 const showPassword = ref(false)
 const showConfirmPassword = ref(false)
@@ -70,7 +71,7 @@ const handleSubmit = async () => {
 }
 
 const handleGoogleLogin = () => {
-    window.location.href = "https://hirely-backend.onrender.com/api/auth/google";
+    window.location.href = `${baseURL}/auth/google`;
 
 };
 
