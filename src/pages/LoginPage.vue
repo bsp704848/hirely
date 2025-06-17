@@ -62,7 +62,7 @@ const handleLogin = async () => {
 }
 
 const handleGoogleLogin = () => {
-    window.open('https://hirely-server.onrender.com/api/auth/google', '_self')
+    window.open('https://hirely-backend.onrender.com/api/auth/google', '_self')
 
 };
 
