@@ -78,7 +78,7 @@ const handleGetStartedClick = () => {
             </div>
 
             <div class="lg:w-1/2 flex justify-center">
-                <Lottieplayer :animationData="animationData || welcomeAnimation" />
+                <Lottieplayer :animationData="animationData || welcomeAnimation" class="w-[600px] h-[400px]" />
             </div>
 
         </div>
