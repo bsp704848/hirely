@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { defineStore } from 'pinia'
+
 const baseURL = import.meta.env.VITE_API_BASE_URL;
 
 export const useAuthStore = defineStore('auth', {
@@ -8,32 +9,33 @@ export const useAuthStore = defineStore('auth', {
         role: localStorage.getItem('role') || '',
         isLoading: false,
     }),
-  
+
     getters: {
-        username: (state) => state.user?.username || '', 
+        username: (state) => state.user?.username || '',
         isLoggedIn: (state) => !!state.user
     },
 
     actions: {
         async register(userData) {
-            await axios.post(`${baseURL}/auth/register`, userData)
+            await axios.post(`${baseURL}/auth/register`, userData);
         },
 
         async login(userData) {
             try {
                 this.isLoading = true;
+
                 const res = await axios.post(`${baseURL}/auth/login`, userData, {
                     withCredentials: true,
                     headers: { 'Content-Type': 'application/json' }
                 });
-                
+
                 this.user = res.data.user;
                 this.role = res.data.user.role;
-          
+
                 localStorage.setItem('user', JSON.stringify(res.data.user));
                 localStorage.setItem('role', res.data.user.role);
                 localStorage.setItem('token', res.data.token); 
-                
+
             } catch (error) {
                 console.error('Login error:', error.response?.data || error.message);
                 throw error;
@@ -42,32 +44,33 @@ export const useAuthStore = defineStore('auth', {
             }
         },
 
-        async fetchUser(router) {
+        async fetchUser(router = null) {
             try {
                 this.isLoading = true;
 
-                const res = await axios.get(`${baseURL}/auth/me`, { 
-                      withCredentials: true,
+                const res = await axios.get(`${baseURL}/auth/me`, {
+                    withCredentials: true
                 });
-                
+
                 if (res.data.user) {
                     this.user = res.data.user;
                     this.role = res.data.user.role;
-                    
-              
+
                     localStorage.setItem('user', JSON.stringify(res.data.user));
                     localStorage.setItem('role', res.data.user.role);
 
-                    return res.data.user; 
+                    return res.data.user;
                 }
+
             } catch (error) {
                 console.error('Fetch user error:', error.response?.data || error.message);
-                this.clearUserData();
-                if (router && error.response?.status === 401) {
-                    router.push('/login');
 
-                    return null;
+               
+                if (error.response?.status === 401) {
+                    this.clearUserData();
+                    if (router) router.push('/login');
                 }
+
             } finally {
                 this.isLoading = false;
             }
@@ -76,24 +79,26 @@ export const useAuthStore = defineStore('auth', {
         clearUserData() {
             this.user = null;
             this.role = '';
+            this.isLoading = false;
+
             localStorage.removeItem('user');
             localStorage.removeItem('role');
-            localStorage.removeItem('token'); 
+            localStorage.removeItem('token');
+
+      
             document.cookie = 'token=; Max-Age=0; Path=/; SameSite=Lax';
         },
 
         async logout() {
             try {
-              await axios.get(`${baseURL}/auth/logout`, {
-                withCredentials: true, 
-              });
+                await axios.get(`${baseURL}/auth/logout`, {
+                    withCredentials: true,
+                });
             } catch (err) {
-              console.warn('Logout API failed:', err.message);
+                console.warn('Logout API failed:', err.message);
             }
-          
+
             this.clearUserData();
-            this.isLoading = false;
-          }
-          
+        }
     }
-})
+});
