@@ -48,13 +48,6 @@ export const useAuthStore = defineStore('auth', {
             try {
                 this.isLoading = true;
 
-                if (!document.cookie.includes('token=')) {
-                    console.warn('No token cookie found. Skipping fetchUser.');
-                    this.clearUserData();
-                    if (router) router.push('/login');
-                    return null;
-                }
-
                 const res = await axios.get(`${baseURL}/auth/me`, {
                     withCredentials: true
                 });
