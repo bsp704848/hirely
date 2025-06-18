@@ -73,12 +73,22 @@ export const useAuthStore = defineStore('auth', {
             }
         },
 
+        // clearUserData() {
+        //     this.user = null;
+        //     this.role = '';
+        //     localStorage.removeItem('user');
+        //     localStorage.removeItem('role');
+        //     localStorage.removeItem('token'); 
+        //     document.cookie = 'token=; Max-Age=0; Path=/; SameSite=Lax';
+        // },
         clearUserData() {
             this.user = null;
             this.role = '';
             localStorage.removeItem('user');
             localStorage.removeItem('role');
-            localStorage.removeItem('token'); 
+            localStorage.removeItem('token');
+        
+            // Clear the token cookie manually (only works if not httpOnly)
             document.cookie = 'token=; Max-Age=0; Path=/; SameSite=Lax';
         },
 
