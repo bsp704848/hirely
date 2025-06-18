@@ -50,9 +50,9 @@ export const useAuthStore = defineStore('auth', {
 
                 const res = await axios.get(`${baseURL}/auth/me`, { 
                       withCredentials: true,
-                     headers: {
-                Authorization: `Bearer ${token}`, 
-            }
+                      headers: {
+                        Authorization: `Bearer ${localStorage.getItem(token)}`
+                      }
                 });
                 
                 if (res.data.user) {
