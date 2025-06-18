@@ -1,6 +1,6 @@
 <script setup>
 import { useRoute, useRouter } from 'vue-router'
-import { ref, watch } from 'vue'
+import { ref, watch,onMounted } from 'vue'
 import Navbar from './components/Navbar.vue'
 import Footer from './components/Footer.vue'
 import ScrollToTop from './components/ScrollToTop.vue'
@@ -17,6 +17,14 @@ const isLoading = ref(false)
 const userStore = useUserStore()
 const jobStore = useJobStore()
 const authStore = useAuthStore()
+
+
+onMounted(() => {
+  setTimeout(() => {
+    authStore.fetchUser(router)
+  }, 500) 
+})
+
 
 router.beforeEach((to, from, next) => {
   isLoading.value = true
