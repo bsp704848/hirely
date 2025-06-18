@@ -46,8 +46,6 @@ export const useAuthStore = defineStore('auth', {
             try {
                 this.isLoading = true;
 
-                const token = localStorage.getItem('token');
-
                 const res = await axios.get(`${baseURL}/auth/me`, { 
                       withCredentials: true,
                 });

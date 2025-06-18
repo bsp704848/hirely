@@ -22,7 +22,7 @@ const authStore = useAuthStore()
 onMounted(() => {
   setTimeout(() => {
     authStore.fetchUser(router)
-  }, 500) 
+  }, 1000) 
 })
 
 
