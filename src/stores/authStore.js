@@ -57,12 +57,16 @@ export const useAuthStore = defineStore('auth', {
               
                     localStorage.setItem('user', JSON.stringify(res.data.user));
                     localStorage.setItem('role', res.data.user.role);
+
+                    return res.data.user; 
                 }
             } catch (error) {
                 console.error('Fetch user error:', error.response?.data || error.message);
                 this.clearUserData();
                 if (router && error.response?.status === 401) {
                     router.push('/login');
+
+                    return null;
                 }
             } finally {
                 this.isLoading = false;
