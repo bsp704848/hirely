@@ -70,6 +70,7 @@ export const useAuthStore = defineStore('auth', {
                     this.clearUserData();
                     if (router) router.push('/login');
                 }
+                return null;
 
             } finally {
                 this.isLoading = false;
@@ -79,7 +80,7 @@ export const useAuthStore = defineStore('auth', {
         clearUserData() {
             this.user = null;
             this.role = '';
-            this.isLoading = false;
+          
 
             localStorage.removeItem('user');
             localStorage.removeItem('role');
@@ -99,6 +100,7 @@ export const useAuthStore = defineStore('auth', {
             }
 
             this.clearUserData();
+            this.isLoading = false;
         }
     }
 });
