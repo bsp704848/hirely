@@ -38,13 +38,15 @@ function handleClickOutside(event) {
 
 onMounted(async () => {
     const hasToken = document.cookie.includes('token=');
-    if ((hasToken || localStorage.getItem('user')) && !authStore.user) {
-        const user = await authStore.fetchUser(router);
-        console.log('User fetched:', user);
+    if (hasToken && !authStore.user) {
+        try {
+            await authStore.fetchUser(router);
+        } catch (err) {
+            console.error('Failed to fetch user on navbar mount:', err);
+        }
     }
     document.addEventListener('click', handleClickOutside);
 });
-
 
 
 onBeforeUnmount(() => {
