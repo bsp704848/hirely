@@ -82,9 +82,18 @@ export const useAuthStore = defineStore('auth', {
             document.cookie = 'token=; Max-Age=0; Path=/; SameSite=Lax';
         },
 
-        logout() {
+        async logout() {
+            try {
+              await axios.get(`${baseURL}/auth/logout`, {
+                withCredentials: true, 
+              });
+            } catch (err) {
+              console.warn('Logout API failed:', err.message);
+            }
+          
             this.clearUserData();
             this.isLoading = false;
-        },
+          }
+          
     }
 })
