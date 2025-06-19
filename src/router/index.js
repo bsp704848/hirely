@@ -13,14 +13,12 @@ import EmployerJobsPage from '../pages/EmployerJobsPage.vue'
 import JobApplicationForm from '../components/JobApplicationForm.vue'
 import AppliedJobs from '../pages/AppliedJobs.vue'
 import EmployerApplications from '../pages/EmployerApplications.vue'
-import GoogleCallback from '../pages/GoogleCallback.vue'
 import EmployerJob from '../pages/EmployerJob.vue'
-import GoogleSuccess from '../pages/GoogleSuccess.vue'
+import GoogleCallback from '../pages/GoogleCallback.vue'
 
 const routes = [
   { path: '/', name: 'HomePage', component: HomePage },
   { path: '/auth/google/callback',name: 'GoogleCallback', component: GoogleCallback, meta: { requiresAuth: true } },
-  { path: '/auth/google/success',name: 'GoogleSuccess', component: GoogleSuccess, meta: { requiresAuth: true } },
   { path: '/register', name: 'RegisterPage', component: RegisterPage },
   { path: '/login', name: 'LoginPage', component: LoginPage },
   { path: '/employer', name: 'EmployerDashboard', component: EmployerDashboard, meta: { requiresAuth: true, role: 'employer' } },

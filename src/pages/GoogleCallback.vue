@@ -1,23 +1,37 @@
 <script setup>
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { onMounted } from 'vue'
 import { useAuthStore } from '../stores/authStore'
 
 const authStore = useAuthStore()
 const router = useRouter()
+const route = useRoute()
 
-onMounted(() => {
-    setTimeout(async () => {
+onMounted(async () => {
+    const token = route.query.token;
+
+    if (token) {
+        localStorage.setItem('token', token);
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
         try {
-            await authStore.fetchUser(router)
-            router.push('/') 
+            const user = await authStore.fetchUser();
+            if (user?.role === 'employer') {
+                router.push('/employer');
+            } else {
+                router.push('/');
+            }
         } catch (err) {
-            router.push('/login')
+            console.error('Google fetchUser failed:', err);
+            router.push('/login');
         }
-    }, 1000)
-})
+    } else {
+        router.push('/login');
+    }
+});
+
 </script>
 
 <template>
-    <div class="text-center mt-20 text-xl font-medium">Logging in via Google...</div>
+    <div class="text-center mt-20 text-xl font-medium">Finishing login via Google...</div>
 </template>
