@@ -5,6 +5,7 @@ import 'primeicons/primeicons.css'
 import Toast from 'vue-toastification'
 import 'vue-toastification/dist/index.css'
 import router from './router'
+import GoogleLoginPlugin from 'vue3-google-login'
 
 import { createPinia } from 'pinia'
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -17,6 +18,9 @@ library.add(faEdit, faTrash, faInfoCircle, faBriefcase,faCalendarWeek, faClock, 
     faBuilding, faEnvelope, faPhone, faMapMarkerAlt, faCheckCircle,faPlus,faSave, faArrowUp,faBars,faXmark,faLocationDot,faList,faIndianRupee,faFontAwesomeFlag)
 
 const app = createApp(App)
+.use(GoogleLoginPlugin, {
+    clientId: '569403411551-7u1vr0104q17kf720sl1avjuik04siri.apps.googleusercontent.com'
+  })
 const pinia = createPinia()
 app.use(pinia)
 app.use(router)

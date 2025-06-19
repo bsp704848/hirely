@@ -45,6 +45,31 @@ export const useAuthStore = defineStore('auth', {
             } finally {
                 this.isLoading = false;
             }
+        }, 
+
+        async googleLogin(googleToken) {
+            try {
+                this.isLoading = true;
+
+                const res = await axios.post(`${baseURL}/auth/google`, { token: googleToken });
+
+                this.user = res.data.user;
+                this.role = res.data.user.role;
+
+                localStorage.setItem('user', JSON.stringify(res.data.user));
+                localStorage.setItem('role', res.data.user.role);
+                localStorage.setItem('token', res.data.token);
+
+                axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`;
+
+                return res.data.user;
+
+            } catch (error) {
+                console.error('Google login error:', error.response?.data || error.message);
+                throw error;
+            } finally {
+                this.isLoading = false;
+            }
         },
 
         async fetchUser(router = null) {
