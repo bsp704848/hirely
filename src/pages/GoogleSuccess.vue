@@ -8,9 +8,12 @@ const router = useRouter()
 const route = useRoute()
 
 onMounted(async () => {
-    if (route.query.tokenSet === 'true') {
+    const token = route.query.token;
+
+    if (token) {
         try {
-           
+            localStorage.setItem('token', token);
+
             await new Promise(resolve => setTimeout(resolve, 500));
             const user = await authStore.fetchUser();
 

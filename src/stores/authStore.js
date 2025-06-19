@@ -25,7 +25,6 @@ export const useAuthStore = defineStore('auth', {
                 this.isLoading = true;
 
                 const res = await axios.post(`${baseURL}/auth/login`, userData, {
-                    withCredentials: true,
                     headers: { 'Content-Type': 'application/json' }
                 });
 
@@ -35,6 +34,8 @@ export const useAuthStore = defineStore('auth', {
                 localStorage.setItem('user', JSON.stringify(res.data.user));
                 localStorage.setItem('role', res.data.user.role);
                 localStorage.setItem('token', res.data.token); 
+
+                axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`;
 
                 return res.data.user; 
 
@@ -50,9 +51,13 @@ export const useAuthStore = defineStore('auth', {
             try {
                 this.isLoading = true;
 
-                const res = await axios.get(`${baseURL}/auth/me`, {
-                    withCredentials: true
-                });
+                const token = localStorage.getItem('token');
+                if (token) {
+                    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+                }
+
+
+                const res = await axios.get(`${baseURL}/auth/me`);
 
                 if (res.data.user) {
                     this.user = res.data.user;
@@ -88,7 +93,8 @@ export const useAuthStore = defineStore('auth', {
             localStorage.removeItem('role');
             localStorage.removeItem('token');
 
-      
+            delete axios.defaults.headers.common['Authorization'];
+
             document.cookie = 'token=; Max-Age=0; Path=/; SameSite=Lax';
         },
 
@@ -96,9 +102,7 @@ export const useAuthStore = defineStore('auth', {
             this.clearUserData(); 
           
             try {
-              await axios.get(`${baseURL}/auth/logout`, {
-                withCredentials: true,
-              });
+                await axios.get(`${baseURL}/auth/logout`);
             } catch (err) {
               console.warn('Logout API failed:', err.message);
             }
