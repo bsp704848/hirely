@@ -18,6 +18,8 @@ const userStore = useUserStore()
 const jobStore = useJobStore()
 const authStore = useAuthStore()
 
+authStore.fetchUser();
+
 
 router.beforeEach((to, from, next) => {
   isLoading.value = true
