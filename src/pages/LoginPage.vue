@@ -38,24 +38,13 @@ const handleLogin = async () => {
         console.log('Login form data:', form.value)
         await authStore.login(form.value);
 
-        toast.success('Login successful');
+        toast.success('Login successful'); 
 
-        setTimeout(() => {
-            if (authStore.isLoggedIn) {
-                const role = authStore.role || 'employee';
-                console.log('Redirecting to role-based page:', role);
+        const role = authStore.role || 'employee';
+        router.push(role === 'employer' ? '/employer' : '/');
 
-                if (role === 'employee') {
-                    router.push('/');
-                } else {
-                    router.push('/employer');
-                }
-            } else {
-                router.push('/login');
-            }
+        form.value = { email: '', password: '' };
 
-            form.value = { email: '', password: '' };
-        }, 1500);
     } catch (err) {
         console.error('Login error:', err.response?.data || err.message);
         toast.error(err.response?.data?.message || err.message || 'Login failed');

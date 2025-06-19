@@ -36,6 +36,8 @@ export const useAuthStore = defineStore('auth', {
                 localStorage.setItem('role', res.data.user.role);
                 localStorage.setItem('token', res.data.token); 
 
+                return res.data.user; 
+
             } catch (error) {
                 console.error('Login error:', error.response?.data || error.message);
                 throw error;
@@ -91,16 +93,18 @@ export const useAuthStore = defineStore('auth', {
         },
 
         async logout() {
+            this.clearUserData(); 
+          
             try {
-                await axios.get(`${baseURL}/auth/logout`, {
-                    withCredentials: true,
-                });
+              await axios.get(`${baseURL}/auth/logout`, {
+                withCredentials: true,
+              });
             } catch (err) {
-                console.warn('Logout API failed:', err.message);
+              console.warn('Logout API failed:', err.message);
             }
-
-            this.clearUserData();
+          
             this.isLoading = false;
-        }
+          }
+          
     }
 });
