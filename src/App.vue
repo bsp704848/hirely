@@ -18,7 +18,10 @@ const userStore = useUserStore()
 const jobStore = useJobStore()
 const authStore = useAuthStore()
 
-authStore.fetchUser();
+setTimeout(() => {
+  authStore.fetchUser();
+}, 1000);
+
 
 
 router.beforeEach((to, from, next) => {
