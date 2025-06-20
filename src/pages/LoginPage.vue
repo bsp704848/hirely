@@ -4,8 +4,8 @@ import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/authStore'
 import { useToast } from 'vue-toastification'
 import loginImage from '../assets/signin.svg'
-// import { GoogleLogin } from 'vue3-google-login'
-import { useGoogleLogin } from 'vue3-google-login'
+import { GoogleLogin } from 'vue3-google-login'
+
 
 const router = useRouter()
 const toast = useToast()
@@ -18,8 +18,7 @@ const form = ref({
 })
 
 const showPassword = ref(false)
-const errorMessage = ref('') 
-const { signIn } = useGoogleLogin()
+const errorMessage = ref('')
 
 const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -139,8 +138,7 @@ const handleGoogleLogin = async () => {
 
                     <p class="text-center flex items-center justify-center gap-2 text-sm">
                         Login with Google
-                        <!-- Removed: <GoogleLogin :callback="handleGoogleLoginSuccess" /> -->
-                        <i @click="handleGoogleLogin" class="pi pi-google text-2xl text-green-500 cursor-pointer"></i>
+                        <GoogleLogin :callback="handleGoogleLoginSuccess" />
                         <!-- <i @click="handleGoogleLogin" class="pi pi-google text-2xl text-green-500"></i> -->
                     </p>
                 </form>
