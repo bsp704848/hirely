@@ -176,9 +176,6 @@ const handleGoogleLogin = async (response) => {
                         Register
                     </button>
 
-                </form>
-                <div class="flex justify-center mt-8">
-
                     <div class="text-sm mb-2">
                         <label class="block font-medium mb-1">Choose Role</label>
                         <select v-model="selectedRole" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
@@ -187,12 +184,13 @@ const handleGoogleLogin = async (response) => {
                             <option value="employer">Employer</option>
                         </select>
                     </div>
-
+    
                     <p class="flex items-center gap-2 text-sm">
                         Login with Google
                         <GoogleLogin :callback="handleGoogleLogin" />
                     </p>
-                </div>
+                </form>
+            
             </div>
         </div>
     </div>
