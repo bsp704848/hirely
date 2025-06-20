@@ -176,21 +176,25 @@ const handleGoogleLogin = async (response) => {
                         Register
                     </button>
 
-                    <div class="text-sm mb-2">
-                        <label class="block font-medium mb-1">Choose Role</label>
-                        <select v-model="selectedRole" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
-                            <option disabled value="">Select a role</option>
-                            <option value="employee">Employee</option>
-                            <option value="employer">Employer</option>
-                        </select>
+                    <div class="col-span-2 flex flex-col gap-4 mt-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Choose Role for Google Login</label>
+                            <select v-model="selectedRole"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                                <option disabled value="">Select a role</option>
+                                <option value="employee">Employee</option>
+                                <option value="employer">Employer</option>
+                            </select>
+                        </div>
+
+                        <div class="flex items-center gap-2 justify-center">
+                            <span class="text-sm">Or login with Google</span>
+                            <GoogleLogin :callback="handleGoogleLogin" />
+                        </div>
                     </div>
-    
-                    <p class="flex items-center gap-2 text-sm">
-                        Login with Google
-                        <GoogleLogin :callback="handleGoogleLogin" />
-                    </p>
+
                 </form>
-            
+
             </div>
         </div>
     </div>
