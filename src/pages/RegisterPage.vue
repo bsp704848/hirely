@@ -76,7 +76,7 @@ const handleGoogleLoginSuccess = async (response) => {
     console.log('Google Token:', token)
 
     try {
-        const res = await fetch(`${baseURL}/api/auth/google`, {
+        const res = await fetch(`${baseURL}/auth/google`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
