@@ -6,7 +6,6 @@ import { useToast } from 'vue-toastification'
 import loginImage from '../assets/signin.svg'
 import { GoogleLogin } from 'vue3-google-login'
 
-
 const router = useRouter()
 const toast = useToast()
 const authStore = useAuthStore()
@@ -53,28 +52,26 @@ const handleLogin = async () => {
     }
 }
 
-const handleGoogleLogin = async () => {
+const handleGoogleLogin = async (response) => {
+    const token = response.credential
+    console.log('Google Token:', token)
+
     try {
-
-        const googleUser = await signIn()
-        const token = googleUser.credential
-        console.log('Google Token:', token)
-
         const res = await fetch(`${baseURL}/auth/google`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             credentials: 'include',
-            body: JSON.stringify({ token }),
+            body: JSON.stringify({ token: response.credential }),
         })
 
         const data = await res.json()
 
         if (!res.ok) throw new Error(data.message || 'Google login failed')
 
-
-        await authStore.googleLogin(token)
+       
+        await authStore.googleLogin(response.credential)
 
         toast.success('Login successful with Google')
         const role = authStore.role || 'employee'
@@ -137,6 +134,7 @@ const handleGoogleLogin = async () => {
                     <p class="text-center flex items-center justify-center gap-2 text-sm">
                         Login with Google
                         <GoogleLogin :callback="handleGoogleLogin" />
+                        <!-- <i @click="handleGoogleLogin" class="pi pi-google text-2xl text-green-500"></i> -->
                     </p>
                 </form>
             </div>

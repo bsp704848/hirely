@@ -71,22 +71,18 @@ const handleSubmit = async () => {
     }
 }
 
-const handleGoogleLogin = async () => {
-
+const handleGoogleLogin = async (response) => {
+    const token = response.credential
+    console.log('Google Token:', token)
 
     try {
-
-        const googleUser = await signIn()
-        const token = googleUser.credential
-        console.log('Google Token:', token)
-
         const res = await fetch(`${baseURL}/auth/google`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             credentials: 'include',
-            body: JSON.stringify({ token }),
+            body: JSON.stringify({ token: response.credential }),
         })
 
         const data = await res.json()
@@ -94,7 +90,7 @@ const handleGoogleLogin = async () => {
         if (!res.ok) throw new Error(data.message || 'Google login failed')
 
 
-        await authStore.googleLogin(token)
+        await authStore.googleLogin(response.credential)
 
         toast.success('Login successful with Google')
         const role = authStore.role || 'employee'
