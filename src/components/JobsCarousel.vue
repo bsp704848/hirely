@@ -84,7 +84,7 @@ function navigateToJobDetails(jobId) {
                                 </p>
                                 <p class="text-sm sm:text-base"><font-awesome-icon icon="list" class="mr-1" /> {{
                                     job.company.companyName || 'Name not specified' }}</p>
-                                <p class="text-sm sm:text-base"><font-awesome-icon icon="list" class="mr-1" /> {{
+                                <p class="text-sm sm:text-base text-truncate"><font-awesome-icon icon="list" class="mr-1" /> {{
                                     job.jobCategory || 'Category not specified' }}</p>
                                 <p class="text-sm sm:text-base">
                                     <font-awesome-icon icon="indian-rupee-sign" class="mr-1" />
