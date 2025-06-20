@@ -4,7 +4,8 @@ import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/authStore'
 import { useToast } from 'vue-toastification'
 import loginImage from '../assets/signin.svg'
-import { GoogleLogin } from 'vue3-google-login'
+// import { GoogleLogin } from 'vue3-google-login'
+import { useGoogleLogin } from 'vue3-google-login'
 
 const router = useRouter()
 const toast = useToast()
@@ -17,7 +18,8 @@ const form = ref({
 })
 
 const showPassword = ref(false)
-const errorMessage = ref('')
+const errorMessage = ref('') 
+const { signIn } = useGoogleLogin()
 
 const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -52,26 +54,30 @@ const handleLogin = async () => {
     }
 }
 
-const handleGoogleLoginSuccess = async (response) => {
-    const token = response.credential
-    console.log('Google Token:', token)
+const handleGoogleLogin = async () => {
+
 
     try {
+
+        const googleUser = await signIn()
+        const token = googleUser.credential
+        console.log('Google Token:', token)
+
         const res = await fetch(`${baseURL}/auth/google`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             credentials: 'include',
-            body: JSON.stringify({ token: response.credential }),
+            body: JSON.stringify({ token }),
         })
 
         const data = await res.json()
 
         if (!res.ok) throw new Error(data.message || 'Google login failed')
 
-       
-        await authStore.googleLogin(response.credential)
+
+        await authStore.googleLogin(token)
 
         toast.success('Login successful with Google')
         const role = authStore.role || 'employee'
@@ -133,7 +139,8 @@ const handleGoogleLoginSuccess = async (response) => {
 
                     <p class="text-center flex items-center justify-center gap-2 text-sm">
                         Login with Google
-                        <GoogleLogin :callback="handleGoogleLoginSuccess" />
+                        <!-- Removed: <GoogleLogin :callback="handleGoogleLoginSuccess" /> -->
+                        <i @click="handleGoogleLogin" class="pi pi-google text-2xl text-green-500 cursor-pointer"></i>
                         <!-- <i @click="handleGoogleLogin" class="pi pi-google text-2xl text-green-500"></i> -->
                     </p>
                 </form>
