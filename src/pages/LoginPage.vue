@@ -71,10 +71,11 @@ const handleGoogleLoginSuccess = async (response) => {
         if (!res.ok) throw new Error(data.message || 'Google login failed')
 
        
-        authStore.setUser(data.user)
+        await authStore.googleLogin(response.credential)
 
         toast.success('Login successful with Google')
-        router.push('/')
+        const role = authStore.role || 'employee'
+        router.push(role === 'employer' ? '/employer' : '/')
     } catch (error) {
         console.error('Google login error:', error)
         toast.error(error.message)
