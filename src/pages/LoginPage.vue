@@ -18,7 +18,7 @@ const form = ref({
 
 const showPassword = ref(false)
 const errorMessage = ref('')
-const selectedRole = ref('')
+const selectedRole = ref('employee')
 
 const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -60,7 +60,8 @@ const handleGoogleLogin = async (response) => {
         return
     }
 
-    const token = response.credential
+    const token = response.credential;
+    const role = selectedRole.value;
 
 
     try {
@@ -70,7 +71,7 @@ const handleGoogleLogin = async (response) => {
                 'Content-Type': 'application/json',
             },
             credentials: 'include',
-            body: JSON.stringify({ token: response.credential, role: selectedRole.value }),
+            body: JSON.stringify({ token, role }),
         })
 
         const data = await res.json()
@@ -81,8 +82,8 @@ const handleGoogleLogin = async (response) => {
         await authStore.googleLogin(response.credential)
 
         toast.success('Login successful with Google')
-        const role = authStore.role || 'employee'
-        router.push(role === 'employer' ? '/employer' : '/')
+        const userRole = authStore.role || 'employee'
+        router.push(userRole === 'employer' ? '/employer' : '/')
     } catch (error) {
         console.error('Google login error:', error)
         toast.error(error.message)
