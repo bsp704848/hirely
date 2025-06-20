@@ -72,7 +72,7 @@ function navigateToJobDetails(jobId) {
                 1440: { itemsToShow: 3 },
             }">
                 <Slide v-for="job in jobs" :key="job._id">
-                    <div class="px-2 sm:px-3 py-2 h-full flex ">
+                    <div class="px-1 sm:px-3 py-2 h-full flex ">
                         <JobCard @click="() => navigateToJobDetails(job._id)" :title="job.jobTitle" :id="job._id"
                             :image="job.company?.logo || defaultImage"
                             class="h-full flex flex-col justify-between w-full min-w-[300px]  min-h-[200px] bg-white shadow-md p-4 transition-transform duration-300 hover:scale-[1.02] border-r-8 border-b-8 border-transparent hover:border-r-green-500 hover:border-b-green-500">
@@ -191,7 +191,7 @@ function navigateToJobDetails(jobId) {
 
 
 .carousel__slide {
-    padding: 0 8px;
+    padding: 0 4px;
 }
 
 
@@ -200,7 +200,7 @@ function navigateToJobDetails(jobId) {
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     background-color: white;
-    padding: 1rem;
+    padding: 0.75rem;
     height: 100%;
 }
 
