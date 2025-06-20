@@ -63,7 +63,7 @@ const handleGoogleLoginSuccess = async (response) => {
                 'Content-Type': 'application/json',
             },
             credentials: 'include',
-            body: JSON.stringify({ token }),
+            body: JSON.stringify({ token: response.credential }),
         })
 
         const data = await res.json()
