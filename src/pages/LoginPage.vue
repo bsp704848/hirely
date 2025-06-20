@@ -54,8 +54,6 @@ const handleLogin = async () => {
 }
 
 const handleGoogleLogin = async () => {
-
-
     try {
 
         const googleUser = await signIn()
@@ -139,7 +137,6 @@ const handleGoogleLogin = async () => {
                     <p class="text-center flex items-center justify-center gap-2 text-sm">
                         Login with Google
                         <GoogleLogin :callback="handleGoogleLogin" />
-                       
                     </p>
                 </form>
             </div>
