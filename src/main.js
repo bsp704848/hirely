@@ -19,7 +19,7 @@ library.add(faEdit, faTrash, faInfoCircle, faBriefcase,faCalendarWeek, faClock, 
 
 const app = createApp(App)
 .use(GoogleLoginPlugin, {
-    clientId: '569403411551-7u1vr0104q17kf720sl1avjuik04siri.apps.googleusercontent.com'
+    clientId:'569403411551-7u1vr0104q17kf720sl1avjuik04siri.apps.googleusercontent.com'
   })
 const pinia = createPinia()
 app.use(pinia)

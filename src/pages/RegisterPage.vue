@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import { useToast } from 'vue-toastification'
 import { useAuthStore } from '../stores/authStore'
 import signupImage from '../assets/signup2.svg'
+import { GoogleLogin } from 'vue3-google-login'
 
 const form = ref({
     username: '',
@@ -70,10 +71,34 @@ const handleSubmit = async () => {
     }
 }
 
-const handleGoogleLogin = () => {
-    window.location.href = `${baseURL}/auth/google`;
+const handleGoogleLoginSuccess = async (response) => {
+    const token = response.credential
+    console.log('Google Token:', token)
 
-};
+    try {
+        const res = await fetch(`${baseURL}/api/auth/google`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify({ token }),
+        })
+
+        const data = await res.json()
+
+        if (!res.ok) throw new Error(data.message || 'Google login failed')
+
+
+        authStore.setUser(data.user)
+
+        toast.success('Login successful with Google')
+        router.push('/')
+    } catch (error) {
+        console.error('Google login error:', error)
+        toast.error(error.message)
+    }
+}
 
 
 </script>
@@ -147,6 +172,7 @@ const handleGoogleLogin = () => {
                 <div class="flex justify-center mt-8">
                     <p class="flex items-center gap-2 text-sm">
                         Login with Google
+                        <GoogleLogin :callback="handleGoogleLoginSuccess" />
                         <i @click="handleGoogleLogin" class="pi pi-google text-2xl text-green-500"></i>
                     </p>
                 </div>

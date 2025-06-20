@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/authStore'
 import { useToast } from 'vue-toastification'
 import loginImage from '../assets/signin.svg'
+import { GoogleLogin } from 'vue3-google-login'
 
 const router = useRouter()
 const toast = useToast()
@@ -51,10 +52,34 @@ const handleLogin = async () => {
     }
 }
 
-const handleGoogleLogin = () => {
-    window.location.href = `${baseURL}/auth/google`;
+const handleGoogleLoginSuccess = async (response) => {
+    const token = response.credential
+    console.log('Google Token:', token)
 
-};
+    try {
+        const res = await fetch(`${baseURL}/api/auth/google`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify({ token }),
+        })
+
+        const data = await res.json()
+
+        if (!res.ok) throw new Error(data.message || 'Google login failed')
+
+       
+        authStore.setUser(data.user)
+
+        toast.success('Login successful with Google')
+        router.push('/')
+    } catch (error) {
+        console.error('Google login error:', error)
+        toast.error(error.message)
+    }
+}
 
 </script>
 
@@ -63,7 +88,7 @@ const handleGoogleLogin = () => {
     <div class="min-h-screen grid grid-cols-1 md:grid-cols-2 ">
 
         <div class="hidden md:flex items-center justify-center">
-             <img :src="loginImage" alt="image" class="w-3/4 h-auto" />
+            <img :src="loginImage" alt="image" class="w-3/4 h-auto" />
         </div>
 
 
@@ -107,6 +132,7 @@ const handleGoogleLogin = () => {
 
                     <p class="text-center flex items-center justify-center gap-2 text-sm">
                         Login with Google
+                        <GoogleLogin :callback="handleGoogleLoginSuccess" />
                         <i @click="handleGoogleLogin" class="pi pi-google text-2xl text-green-500"></i>
                     </p>
                 </form>

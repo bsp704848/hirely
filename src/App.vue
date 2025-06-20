@@ -22,8 +22,6 @@ setTimeout(() => {
   authStore.fetchUser();
 }, 1000);
 
-
-
 router.beforeEach((to, from, next) => {
   isLoading.value = true
   next()
