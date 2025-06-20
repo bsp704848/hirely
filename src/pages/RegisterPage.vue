@@ -22,6 +22,7 @@ const baseURL = import.meta.env.VITE_API_BASE_URL
 const showPassword = ref(false)
 const showConfirmPassword = ref(false)
 const errorMessage = ref('')
+const selectedRole = ref('')
 
 const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -72,6 +73,12 @@ const handleSubmit = async () => {
 }
 
 const handleGoogleLogin = async (response) => {
+
+    if (!selectedRole.value) {
+        toast.error("Please select a role before continuing with Google login")
+        return
+    }
+
     const token = response.credential
     console.log('Google Token:', token)
 
@@ -82,7 +89,7 @@ const handleGoogleLogin = async (response) => {
                 'Content-Type': 'application/json',
             },
             credentials: 'include',
-            body: JSON.stringify({ token: response.credential }),
+            body: JSON.stringify({ token: response.credential, role: selectedRole.value }),
         })
 
         const data = await res.json()
@@ -171,6 +178,16 @@ const handleGoogleLogin = async (response) => {
 
                 </form>
                 <div class="flex justify-center mt-8">
+
+                    <div class="text-sm mb-2">
+                        <label class="block font-medium mb-1">Choose Role</label>
+                        <select v-model="selectedRole" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                            <option disabled value="">Select a role</option>
+                            <option value="employee">Employee</option>
+                            <option value="employer">Employer</option>
+                        </select>
+                    </div>
+
                     <p class="flex items-center gap-2 text-sm">
                         Login with Google
                         <GoogleLogin :callback="handleGoogleLogin" />
