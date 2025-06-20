@@ -133,7 +133,7 @@ const handleGoogleLoginSuccess = async (response) => {
                     <p class="text-center flex items-center justify-center gap-2 text-sm">
                         Login with Google
                         <GoogleLogin :callback="handleGoogleLoginSuccess" />
-                        <i @click="handleGoogleLogin" class="pi pi-google text-2xl text-green-500"></i>
+                        <!-- <i @click="handleGoogleLogin" class="pi pi-google text-2xl text-green-500"></i> -->
                     </p>
                 </form>
             </div>
