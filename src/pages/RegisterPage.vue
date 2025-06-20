@@ -21,14 +21,7 @@ const baseURL = import.meta.env.VITE_API_BASE_URL
 
 const showPassword = ref(false)
 const showConfirmPassword = ref(false)
-const errorMessage = ref('') 
-const googleLoginBtn = ref(null) 
-
-
-const triggerGoogleLogin = () => {
-    const button = googleLoginBtn.value?.querySelector('div')
-    if (button) button.click()
-}
+const errorMessage = ref('')
 
 const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -78,17 +71,22 @@ const handleSubmit = async () => {
     }
 }
 
-const handleGoogleLogin = async (response) => {
-    const token = response.credential
+const handleGoogleLogin = async () => {
+
 
     try {
+
+        const googleUser = await signIn()
+        const token = googleUser.credential
+        console.log('Google Token:', token)
+
         const res = await fetch(`${baseURL}/auth/google`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             credentials: 'include',
-            body: JSON.stringify({ token: response.credential }),
+            body: JSON.stringify({ token }),
         })
 
         const data = await res.json()
@@ -96,7 +94,7 @@ const handleGoogleLogin = async (response) => {
         if (!res.ok) throw new Error(data.message || 'Google login failed')
 
 
-        await authStore.googleLogin(response.credential)
+        await authStore.googleLogin(token)
 
         toast.success('Login successful with Google')
         const role = authStore.role || 'employee'
@@ -178,16 +176,9 @@ const handleGoogleLogin = async (response) => {
                 </form>
                 <div class="flex justify-center mt-8">
                     <p class="flex items-center gap-2 text-sm">
-                        Register with Google
-
-                    </p>
-
-                    <i @click="triggerGoogleLogin" class="pi pi-google text-2xl text-green-500 cursor-pointer"></i>
-
-
-                    <div ref="googleLoginBtn" class="hidden">
+                        Login with Google
                         <GoogleLogin :callback="handleGoogleLogin" />
-                    </div>
+                    </p>
                 </div>
             </div>
         </div>
