@@ -25,7 +25,7 @@ onMounted(() => {
         </div>
         <div v-else-if="jobs.length > 0" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div v-for="job in props.jobs" :key="job.id"
-                class="bg-white dark:bg-gray-900 dark:text-white dark:border-gray-700 rounded-tl-3xl rounded-br-3xl shadow-lg hover:shadow-xl transition-all transform hover:scale-[1.02] p-6 border-r-8 border-b-8 border-t-2 border-l-2 border-transparent hover:border-sky-500 
+                class="bg-white dark:bg-gray-900 dark:text-white dark:border-gray-700 rounded-tl-3xl rounded-br-3xl shadow-lg hover:shadow-xl transition-all transform hover:scale-[1.02] p-6 border-r-8 border-b-8 border-t-2 border-l-2 border-transparent hover:border-green-500 
                 ">
                 <h2 class="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">Job Title : {{ job.jobTitle }}</h2>
                 <p><span class="font-semibold text-gray-700 dark:text-gray-300">Category:</span> {{ job.jobCategory }}
