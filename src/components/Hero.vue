@@ -34,8 +34,6 @@ const router = useRouter()
 const handleGetStartedClick = () => {
     if (authStore.isLoggedIn) {
         const role = authStore.role || 'employee';
-        console.log('Redirecting to role-based page:', role);
-
         if (role === 'employee') {
             setTimeout(() => {
                 router.push('/jobs');

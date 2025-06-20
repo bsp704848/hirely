@@ -21,7 +21,14 @@ const baseURL = import.meta.env.VITE_API_BASE_URL
 
 const showPassword = ref(false)
 const showConfirmPassword = ref(false)
-const errorMessage = ref('')
+const errorMessage = ref('') 
+const googleLoginBtn = ref(null) 
+
+
+const triggerGoogleLogin = () => {
+    const button = googleLoginBtn.value?.querySelector('div')
+    if (button) button.click()
+}
 
 const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -71,9 +78,8 @@ const handleSubmit = async () => {
     }
 }
 
-const handleGoogleLoginSuccess = async (response) => {
+const handleGoogleLogin = async (response) => {
     const token = response.credential
-    console.log('Google Token:', token)
 
     try {
         const res = await fetch(`${baseURL}/auth/google`, {
@@ -172,10 +178,16 @@ const handleGoogleLoginSuccess = async (response) => {
                 </form>
                 <div class="flex justify-center mt-8">
                     <p class="flex items-center gap-2 text-sm">
-                        Login with Google
-                        <GoogleLogin :callback="handleGoogleLoginSuccess" />
-                        <!-- <i @click="handleGoogleLogin" class="pi pi-google text-2xl text-green-500"></i> -->
+                        Register with Google
+
                     </p>
+
+                    <i @click="triggerGoogleLogin" class="pi pi-google text-2xl text-green-500 cursor-pointer"></i>
+
+
+                    <div ref="googleLoginBtn" class="hidden">
+                        <GoogleLogin :callback="handleGoogleLogin" />
+                    </div>
                 </div>
             </div>
         </div>

@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref} from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/authStore'
 import { useToast } from 'vue-toastification'
@@ -18,7 +18,13 @@ const form = ref({
 })
 
 const showPassword = ref(false)
-const errorMessage = ref('')
+const errorMessage = ref('') 
+const googleLoginBtn = ref(null) 
+
+const triggerGoogleLogin = () => {
+    const button = googleLoginBtn.value?.querySelector('div')
+    if (button) button.click()
+}
 
 const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -37,7 +43,6 @@ const handleLogin = async () => {
     }
     errorMessage.value = ''
     try {
-        console.log('Login form data:', form.value)
         await authStore.login(form.value);
 
         toast.success('Login successful'); 
@@ -60,7 +65,6 @@ const handleGoogleLogin = async () => {
 
         const googleUser = await signIn()
         const token = googleUser.credential
-        console.log('Google Token:', token)
 
         const res = await fetch(`${baseURL}/auth/google`, {
             method: 'POST',
@@ -136,11 +140,18 @@ const handleGoogleLogin = async () => {
                     </button>
 
 
-                    <p class="text-center flex items-center justify-center gap-2 text-sm">
-                        Login with Google
-                        <GoogleLogin :callback="handleGoogleLoginSuccess" />
-                        <!-- <i @click="handleGoogleLogin" class="pi pi-google text-2xl text-green-500"></i> -->
-                    </p>
+                    <div class="flex justify-center mt-8">
+                        <p class="flex items-center gap-2 text-sm">
+                            Login with Google
+                        </p>
+                            <i @click="triggerGoogleLogin"
+                                class="pi pi-google text-2xl text-green-500 cursor-pointer"></i>
+
+                        <div ref="googleLoginBtn" class="hidden">
+                            <GoogleLogin :callback="handleGoogleLogin" />
+                        </div>
+                    </div>
+
                 </form>
             </div>
         </div>

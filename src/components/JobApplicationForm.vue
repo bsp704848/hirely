@@ -156,7 +156,6 @@ async function submitForm() {
         toast.error(errors.value.birthdate)
         return
     }
-    console.log('Submitting form:', form.value)
     try {
         await applicationStore.submitApplication(form.value, localStorage.getItem('token'))
         toast.success('Application submitted!')

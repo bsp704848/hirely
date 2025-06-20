@@ -5,7 +5,6 @@ import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
 import { useAuthStore } from '../stores/authStore'
 
 const authStore = useAuthStore()
-console.log('Navbar authStore state:', authStore);
 const isEmployer = computed(() => authStore.role === 'employer')
 const showDropdown = ref(false)
 const router = useRouter()

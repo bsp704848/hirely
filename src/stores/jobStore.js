@@ -197,9 +197,6 @@ export const useJobStore = defineStore('jobStore', () => {
         appliedJobs.value.splice(idx2, 1, updatedApp)
       }
 
-
-      console.log('employerApplications', employerApplications.value)
-      console.log('appliedJobs', appliedJobs.value)
       
       return response.data
     } catch (error) {
