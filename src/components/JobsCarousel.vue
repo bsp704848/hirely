@@ -59,7 +59,7 @@ function navigateToJobDetails(jobId) {
                 No current job openings available
             </div>
 
-            <Carousel v-else :items-to-show="1.2" :autoplay="0" :transition="500" class="w-full relative" :breakpoints="{
+            <Carousel v-else :items-to-show="1" :autoplay="0" :transition="500" class="w-full relative" :breakpoints="{
                 320: { itemsToShow: 1 },
                 375: { itemsToShow: 1 },
                 400: { itemsToShow: 1 },
@@ -215,7 +215,7 @@ function navigateToJobDetails(jobId) {
 
 .carousel__slide .job-card {
     border-radius: 1rem;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.3s ease;
     background-color: #fff;
     padding: 1rem;
     height: 100%;
