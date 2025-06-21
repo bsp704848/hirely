@@ -66,7 +66,7 @@ const handleGetStartedClick = () => {
                         <span class="typing text-black"></span>
                     </Typed>
                 </p>
-                <p class="text-base sm:text-lg md:text-xl mb-6 text-gray-700">
+                <p class="text-base sm:text-lg md:text-xl mb-6 text-gray-800">
                     Empower your career journey with seamless registration, job matching, and employee management.
                 </p>
                 <button v-if="showButton" @click="handleGetStartedClick"

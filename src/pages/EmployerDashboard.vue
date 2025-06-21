@@ -57,7 +57,7 @@ const steps = [
                         <h3 class="text-xl font-semibold text-gray-700 dark:text-white">
                             {{ step.title }}
                         </h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-300 mt-2 px-2">
+                        <p class="text-sm text-gray-800 dark:text-gray-300 mt-2 px-2">
                             {{ step.description }}
                         </p>
                     </div>
@@ -66,7 +66,7 @@ const steps = [
             </section>
 
             <div class="text-center mt-12">
-                <p class="text-lg text-gray-600 dark:text-gray-300 mb-6">
+                <p class="text-lg text-gray-800 dark:text-gray-300 mb-6">
                     Ready to find your next great hire?
                 </p>
                 <RouterLink to="/addJob"

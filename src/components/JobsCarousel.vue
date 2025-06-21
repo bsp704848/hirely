@@ -59,13 +59,15 @@ function navigateToJobDetails(jobId) {
                 No current job openings available
             </div>
 
-            <Carousel v-else :items-to-show="1" :autoplay="0" :transition="500" class="w-full" :breakpoints="{
-                320: { itemsToShow: 1 },
-                640: { itemsToShow: 1 },
-                768: { itemsToShow: 2 },
-                1024: { itemsToShow: 3 },
-                1280: { itemsToShow: 3 }
-            }">
+            <Carousel :items-to-show="3" :items-to-scroll="3" :autoplay="0" :transition="500"
+                :wrap-around="false" class="w-full" :breakpoints="{
+                    320: { itemsToShow: 1, itemsToScroll: 1  },
+                    640: { itemsToShow: 1, itemsToScroll: 1},
+                    768: { itemsToShow: 2, itemsToScroll: 2 },
+                    1024: { itemsToShow: 3, itemsToScroll: 3  },
+                    1280: { itemsToShow: 3, itemsToScroll: 3  }
+                }">
+
                 <Slide v-for="job in jobs" :key="job._id">
                     <div class="h-full flex">
                         <JobCard @click="() => navigateToJobDetails(job._id)" :title="job.jobTitle" :id="job._id"
@@ -79,15 +81,15 @@ function navigateToJobDetails(jobId) {
                                 </p>
                                 <p class="text-sm sm:text-base"><font-awesome-icon icon="list" class="mr-1" /> {{
                                     job.company.companyName || 'Name not specified' }}</p>
-                                <p class="text-sm sm:text-base text-truncate"><font-awesome-icon icon="list"
+                                <p class="text-sm sm:text-base"><font-awesome-icon icon="list"
                                         class="mr-1" /> {{
-                                            job.jobCategory || 'Category not specified' }}</p>
+                                    job.jobCategory || 'Category not specified' }}</p>
                                 <p class="text-sm sm:text-base">
                                     <font-awesome-icon icon="indian-rupee-sign" class="mr-1" />
                                     <span v-if="job.salary && typeof job.salary === 'object'">
                                         {{ job.salary.min?.toLocaleString() || 'NA' }} - {{
-                                            job.salary.max?.toLocaleString()
-                                            || 'NA' }} /month
+                                        job.salary.max?.toLocaleString()
+                                        || 'NA' }} /month
                                     </span>
                                     <span v-else>
                                         {{ job.salary || 'Salary not specified' }}
@@ -100,30 +102,29 @@ function navigateToJobDetails(jobId) {
 
                 <template #addons>
                     <Navigation>
-                        <template #next>
-                            <button aria-label="Next slide"
-                                class="carousel__next bg-green-600 hover:bg-green-700 text-white p-2 absolute right-0 top-1/2 transform -translate-y-1/2 -translate-x-4 shadow-lg">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
-                                    fill="currentColor">
-                                    <path fill-rule="evenodd"
-                                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                            </button>
-                        </template>
                         <template #prev>
-                            <button aria-label="Previous slide"
-                                class="carousel__prev bg-green-600 hover:bg-green-700 text-white p-2 absolute left-0 top-1/2 transform -translate-y-1/2 translate-x-4 shadow-lg">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
-                                    fill="currentColor">
+                            <button aria-label="Previous slide" class="carousel-nav-btn carousel-prev">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor"
+                                    viewBox="0 0 20 20">
                                     <path fill-rule="evenodd"
                                         d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
                                         clip-rule="evenodd" />
                                 </svg>
                             </button>
                         </template>
+                        <template #next>
+                            <button aria-label="Next slide" class="carousel-nav-btn carousel-next">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor"
+                                    viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        </template>
                     </Navigation>
                 </template>
+
             </Carousel>
 
             <div class="text-center mt-8 sm:mt-10">
@@ -143,6 +144,32 @@ function navigateToJobDetails(jobId) {
 </template>
 
 <style scoped>
+.carousel-nav-btn {
+    @apply bg-green-600 hover:bg-green-700 text-white w-10 h-10 rounded-full flex items-center justify-center shadow-md transition;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 20;
+}
+
+.carousel-prev {
+    left: 1rem;
+}
+
+.carousel-next {
+    right: 1rem;
+}
+
+@media (max-width: 768px) {
+    .carousel-prev {
+        left: 0.5rem;
+    }
+
+    .carousel-next {
+        right: 0.5rem;
+    }
+}
+
 .carousel__next,
 .carousel__prev {
     width: 44px;
@@ -166,52 +193,10 @@ function navigateToJobDetails(jobId) {
 }
 
 .carousel__slide {
-    padding: 0 !important;
     display: flex;
     justify-content: center;
-}
-
-@media (max-width: 639px) {
-    .carousel__slide {
-        margin: 0 4px;
-    }
-}
-
-@media (min-width: 640px) and (max-width: 1023px) {
-    .carousel__slide {
-        margin: 0 8px;
-    }
-}
-
-@media (min-width: 1024px) {
-    .carousel__slide {
-        margin: 0 12px;
-    }
-}
-
-.job-card {
-    background-color: #ffffff;
-    border-radius: 1.25rem;
-    padding: 1.25rem;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
-    transition: transform 0.3s ease, border-color 0.3s ease;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    border: 1px solid transparent;
-}
-
-.job-card:hover {
-    transform: scale(1.03);
-    border-right: 4px solid #22c55e;
-    border-bottom: 4px solid #22c55e;
-}
-
-@media (max-width: 400px) {
-    .job-card {
-        min-width: 260px;
-        padding: 1rem;
-    }
+    padding: 0 4px;
+    box-sizing: border-box;
 }
 
 .job-card p {
@@ -219,6 +204,19 @@ function navigateToJobDetails(jobId) {
     font-size: 0.875rem;
     color: #1f2937;
     line-height: 1.6;
+}
+
+@media (max-width: 1024px) {
+    .job-card {
+        min-width: 95%;
+    }
+}
+
+@media (max-width: 768px) {
+    .job-card {
+        min-width: 100%;
+        padding: 1rem;
+    }
 }
 
 .dark .job-card {
@@ -231,3 +229,4 @@ function navigateToJobDetails(jobId) {
     color: #cbd5e1;
 }
 </style>
+

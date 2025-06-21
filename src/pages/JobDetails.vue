@@ -223,15 +223,15 @@ const handleClick = (jobId) => {
                                 class="font-semibold text-lg text-green-700 dark:text-green-400 truncate group-hover:underline">
                                 {{ related.jobTitle }}
                             </h4>
-                            <p class="text-gray-600 dark:text-gray-300 text-sm truncate">
+                            <p class="text-gray-800 dark:text-gray-300 text-sm truncate">
                                 {{ related.company?.companyName }}
                             </p>
-                            <p class="text-gray-600 dark:text-gray-300 text-sm">
+                            <p class="text-gray-800 dark:text-gray-300 text-sm">
                                 {{ related.salary && typeof related.salary === 'object'
                                 ? `${related.salary.min.toLocaleString()} - ${related.salary.max.toLocaleString()} `
                                 : related.salary }} &#8377; /month
                             </p>
-                            <p class="text-gray-500 dark:text-gray-400 text-xs">
+                            <p class="text-gray-800 dark:text-gray-400 text-xs">
                                 {{ related.jobType }} | {{ related.company?.location }}
                             </p>
                             <button @click.stop="handleClick(related._id)"
@@ -240,7 +240,7 @@ const handleClick = (jobId) => {
                             </button>
                         </div>
                     </div>
-                    <div v-else class="text-gray-500 dark:text-gray-400 text-center py-8">
+                    <div v-else class="text-gray-800 dark:text-gray-400 text-center py-8">
                         No related jobs found.
                     </div>
                 </div>

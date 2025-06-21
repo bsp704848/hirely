@@ -215,7 +215,7 @@ async function submitForm() {
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mt-10">
 
                         <div>
-                            <label for="name" class="block mb-1 font-medium text-gray-700 dark:text-gray-200">Full
+                            <label for="name" class="block mb-1 font-medium text-gray-800 dark:text-gray-200">Full
                                 Name</label>
                             <input id="name" v-model="form.name" type="text" required
                                 @input="e => validateTextInput(e, 'name')"
@@ -223,14 +223,14 @@ async function submitForm() {
                             <span v-if="errors.name" class="text-red-500 text-xs">{{ errors.name }}</span>
                         </div>
                         <div>
-                            <label for="email" class="block mb-1 font-medium text-gray-700 dark:text-gray-200">Email
+                            <label for="email" class="block mb-1 font-medium text-gray-800 dark:text-gray-200">Email
                                 Address</label>
                             <input id="email" v-model="form.email" type="email" required @input="validateEmail"
                                 class="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-green-500" />
                             <span v-if="errors.email" class="text-red-500 text-xs">{{ errors.email }}</span>
                         </div>
                         <div>
-                            <label for="phone" class="block mb-1 font-medium text-gray-700 dark:text-gray-200">Phone
+                            <label for="phone" class="block mb-1 font-medium text-gray-800 dark:text-gray-200">Phone
                                 Number</label>
                             <input id="phone" v-model="form.phone" type="tel" required maxlength="10" pattern="\d{10}"
                                 @input="validatePhone"
@@ -238,7 +238,7 @@ async function submitForm() {
                             <span v-if="errors.phone" class="text-red-500 text-xs">{{ errors.phone }}</span>
                         </div>
                         <div>
-                            <label for="birthdate" class="block mb-1 font-medium text-gray-700 dark:text-gray-200">Birth
+                            <label for="birthdate" class="block mb-1 font-medium text-gray-800 dark:text-gray-200">Birth
                                 Date</label>
                             <input id="birthdate" v-model="form.birthdate" type="date" required
                                 @input="validateBirthdate"
@@ -246,7 +246,7 @@ async function submitForm() {
                             <span v-if="errors.birthdate" class="text-red-500 text-xs">{{ errors.birthdate }}</span>
                         </div>
                         <div>
-                            <label for="address" class="block mb-1 font-medium text-gray-700 dark:text-gray-200">Street
+                            <label for="address" class="block mb-1 font-medium text-gray-800 dark:text-gray-200">Street
                                 Address</label>
                             <input id="address" v-model="form.address" type="text" required
                                 @input="e => validateTextInput(e, 'address')"
@@ -255,7 +255,7 @@ async function submitForm() {
                         </div>
                         <div>
                             <label for="city"
-                                class="block mb-1 font-medium text-gray-700 dark:text-gray-200">City</label>
+                                class="block mb-1 font-medium text-gray-800 dark:text-gray-200">City</label>
                             <input id="city" v-model="form.city" type="text" required
                                 @input="e => validateTextInput(e, 'city')"
                                 class="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-green-500" />
@@ -263,14 +263,14 @@ async function submitForm() {
                         </div>
                         <div>
                             <label for="state"
-                                class="block mb-1 font-medium text-gray-700 dark:text-gray-200">State</label>
+                                class="block mb-1 font-medium text-gray-800 dark:text-gray-200">State</label>
                             <input id="state" v-model="form.state" type="text" required
                                 @input="e => validateTextInput(e, 'state')"
                                 class="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-green-500" />
                             <span v-if="errors.state" class="text-red-500 text-xs">{{ errors.state }}</span>
                         </div>
                         <div>
-                            <label for="zip" class="block mb-1 font-medium text-gray-700 dark:text-gray-200">Zip
+                            <label for="zip" class="block mb-1 font-medium text-gray-800 dark:text-gray-200">Zip
                                 Code</label>
                             <input id="zip" v-model="form.zip" type="text" required maxlength="6" @input="validateZip"
                                 class="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-green-500" />
@@ -278,7 +278,7 @@ async function submitForm() {
                         </div>
                         <div>
                             <label for="position"
-                                class="block mb-1 font-medium text-gray-700 dark:text-gray-200">Position Applied
+                                class="block mb-1 font-medium text-gray-800 dark:text-gray-200">Position Applied
                                 For</label>
                             <input id="position" :value="jobStore.selectedJob?.jobTitle || ''" type="text" required
                                 readonly
@@ -286,19 +286,19 @@ async function submitForm() {
                         </div>
                         <div>
                             <label for="employername"
-                                class="block mb-1 font-medium text-gray-700 dark:text-gray-200">Employer Name</label>
+                                class="block mb-1 font-medium text-gray-800 dark:text-gray-200">Employer Name</label>
                             <input id="employername" v-model="form.employerName" type="text" required readonly
                                 class="w-full px-4 py-2 rounded-lg border bg-gray-100 focus:ring-2 focus:ring-green-500" />
                         </div>
                         <div>
                             <label for="startDate"
-                                class="block mb-1 font-medium text-gray-700 dark:text-gray-200">Available Start
+                                class="block mb-1 font-medium text-gray-800 dark:text-gray-200">Available Start
                                 Date</label>
                             <input id="startDate" v-model="form.startDate" type="date" required
                                 class="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-green-500" />
                         </div>
                         <div>
-                            <label for="hearAbout" class="block mb-1 font-medium text-gray-700 dark:text-gray-200">How
+                            <label for="hearAbout" class="block mb-1 font-medium text-gray-800 dark:text-gray-200">How
                                 did you hear about us?</label>
                             <select id="hearAbout" v-model="form.hearAbout" required
                                 class="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-green-500">

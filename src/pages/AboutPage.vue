@@ -17,7 +17,7 @@ import teamImage from '../assets/team.jpg'
             <div class="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
                 <div>
                     <h2 class="text-3xl font-bold text-green-700 mb-4">Who Are We?</h2>
-                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                    <p class="text-gray-800 dark:text-gray-300 leading-relaxed">
                         Hirely is a forward-thinking job platform dedicated to helping businesses connect with top-tier
                         talent.
                         We’re not just a job board — we’re a talent ecosystem that bridges the gap between employers and
@@ -34,7 +34,7 @@ import teamImage from '../assets/team.jpg'
         <div class="py-12">
             <div class="max-w-6xl mx-auto px-6 text-center">
                 <h2 class="text-3xl font-bold text-green-700 mb-6">What We Do</h2>
-                <p class="text-gray-700 dark:text-gray-300 mb-8 leading-relaxed max-w-4xl mx-auto">
+                <p class="text-gray-800 dark:text-gray-300 mb-8 leading-relaxed max-w-4xl mx-auto">
                     We offer a modern platform for job listings, resume screening, employer branding, and advanced
                     filtering.
                     Whether you're a startup or an enterprise, Hirely helps streamline hiring with smart tools and
