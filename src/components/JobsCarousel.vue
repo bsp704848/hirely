@@ -150,37 +150,35 @@ function navigateToJobDetails(jobId) {
 
 .carousel__next,
 .carousel__prev {
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s ease;
-    border-radius: 50%;
-    background-color: #0baa45;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    background-color: #22c55e;
+    border-radius: 9999px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: background-color 0.3s ease, transform 0.2s ease;
     z-index: 10;
 }
 
 .carousel__next:hover,
 .carousel__prev:hover {
-    transform: translateY(-50%) scale(1.1);
-    background-color: #0c8639;
+    background-color: #16a34a;
+    transform: scale(1.1);
 }
 
 @media (max-width: 640px) {
     .carousel__next {
-        right: 6px !important;
-        transform: translateY(-50%);
+        right: 10px !important;
     }
 
     .carousel__prev {
-        left: 6px !important;
-        transform: translateY(-50%);
+        left: 10px !important;
     }
 }
 
-
+/* Hide scrollbar and track spacing */
 .carousel__track {
     scrollbar-width: none;
 }
@@ -189,70 +187,74 @@ function navigateToJobDetails(jobId) {
     display: none;
 }
 
-
+/* Slide padding and spacing */
 .carousel__slide {
     padding: 0 !important;
+    display: flex;
+    justify-content: center;
 }
 
 @media (max-width: 639px) {
     .carousel__slide {
-        margin: 0 2px;
+        margin: 0 4px;
     }
 }
 
 @media (min-width: 640px) and (max-width: 1023px) {
     .carousel__slide {
-        margin: 0 6px;
+        margin: 0 8px;
     }
 }
 
 @media (min-width: 1024px) {
     .carousel__slide {
-        margin: 0 10px;
+        margin: 0 12px;
     }
 }
 
 
 .carousel__slide .job-card {
-    border-radius: 1rem;
-    transition: transform 0.3s ease;
-    background-color: #fff;
-    padding: 1rem;
+    background-color: #ffffff;
+    border-radius: 1.25rem;
+    padding: 1.25rem;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+    transition: transform 0.3s ease, border-color 0.3s ease;
     height: 100%;
-    border: 1px solid #f0f0f0;
-    position: relative;
-    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid transparent;
 }
 
 .carousel__slide .job-card:hover {
-    transform: scale(1.02);
-    border-color: #0baa45;
+    transform: scale(1.03);
+    border-right: 4px solid #22c55e;
+    border-bottom: 4px solid #22c55e;
 }
 
 
 @media (max-width: 400px) {
     .carousel__slide .job-card {
         min-width: 260px;
-        padding: 0.75rem;
+        padding: 1rem;
     }
 }
 
 
 .carousel__slide .job-card p {
-    line-height: 1.5;
-    margin-bottom: 0.35rem;
-    color: #1e293b;
+    margin-bottom: 0.5rem;
     font-size: 0.875rem;
+    color: #1f2937;
+    line-height: 1.6;
 }
 
 
 .dark .carousel__slide .job-card {
-    background-color: #1f2937;
+    background-color: #1e293b;
+    color: #f8fafc;
     border-color: #334155;
-    color: #f1f5f9;
 }
 
 .dark .carousel__slide .job-card p {
-    color: #e2e8f0;
+    color: #cbd5e1;
 }
 </style>
