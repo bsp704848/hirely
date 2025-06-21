@@ -157,12 +157,6 @@ function navigateToJobDetails(jobId) {
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.carousel__next:hover,
-.carousel__prev:hover {
-    background-color: #16a34a;
-    transform: scale(1.1);
-}
-
 .carousel__track {
     scrollbar-width: none;
 }
