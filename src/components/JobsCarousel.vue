@@ -72,10 +72,10 @@ function navigateToJobDetails(jobId) {
                 1440: { itemsToShow: 3 },
             }">
                 <Slide v-for="job in jobs" :key="job._id">
-                    <div class="h-full flex ">
+                    <div class="h-full flex">
                         <JobCard @click="() => navigateToJobDetails(job._id)" :title="job.jobTitle" :id="job._id"
                             :image="job.company?.logo || defaultImage"
-                            class="h-full flex flex-col justify-between w-full min-w-[300px]  min-h-[200px] bg-white shadow-md p-4 transition-transform duration-300 hover:scale-[1.02] border-r-8 border-b-8 border-transparent hover:border-r-green-500 hover:border-b-green-500">
+                            class="h-full flex flex-col justify-between w-full min-w-[300px]  min-h-[200px] bg-white p-4 transition-transform duration-300 hover:scale-[1.02] border-r-8 border-b-8 border-transparent hover:border-r-green-500 hover:border-b-green-500">
 
                             <div class="flex-1">
                                 <p class=" text-sm sm:text-base">
@@ -159,6 +159,7 @@ function navigateToJobDetails(jobId) {
     border-radius: 50%;
     background-color: #0baa45;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    z-index: 10;
 }
 
 .carousel__next:hover,
@@ -167,15 +168,14 @@ function navigateToJobDetails(jobId) {
     background-color: #0c8639;
 }
 
-
 @media (max-width: 640px) {
     .carousel__next {
-        right: 10px !important;
+        right: 6px !important;
         transform: translateY(-50%);
     }
 
     .carousel__prev {
-        left: 10px !important;
+        left: 6px !important;
         transform: translateY(-50%);
     }
 }
@@ -191,37 +191,20 @@ function navigateToJobDetails(jobId) {
 
 
 .carousel__slide {
-    margin: 0 2px !important;
+    padding: 0 !important;
 }
 
-
-.carousel__slide .job-card {
-    border-radius: 1rem;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    background-color: white;
-    padding: 0.75rem;
-    height: 100%;
-}
-
-.carousel__slide .job-card:hover {
-    transform: scale(1.03);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-}
-
-
-@media (max-width: 400px) {
-    .carousel__slide .job-card {
-        min-width: 260px;
-        padding: 0.75rem;
+@media (max-width: 639px) {
+    .carousel__slide {
+        margin: 0 2px;
     }
-} 
+}
 
 @media (min-width: 640px) and (max-width: 1023px) {
     .carousel__slide {
         margin: 0 6px;
     }
-} 
+}
 
 @media (min-width: 1024px) {
     .carousel__slide {
@@ -230,15 +213,44 @@ function navigateToJobDetails(jobId) {
 }
 
 
+.carousel__slide .job-card {
+    border-radius: 1rem;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: #fff;
+    padding: 1rem;
+    height: 100%;
+    border: 1px solid #f0f0f0;
+    position: relative;
+    z-index: 1;
+}
+
+.carousel__slide .job-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 24px rgba(0, 128, 0, 0.12);
+    border-color: #0baa45;
+}
+
+
+@media (max-width: 400px) {
+    .carousel__slide .job-card {
+        min-width: 260px;
+        padding: 0.75rem;
+    }
+}
+
+
 .carousel__slide .job-card p {
-    line-height: 1.4;
-    margin-bottom: 0.3rem;
-    color: #333;
+    line-height: 1.5;
+    margin-bottom: 0.35rem;
+    color: #1e293b;
+    font-size: 0.875rem;
 }
 
 
 .dark .carousel__slide .job-card {
-    background-color: #1e293b;
+    background-color: #1f2937;
+    border-color: #334155;
     color: #f1f5f9;
 }
 
