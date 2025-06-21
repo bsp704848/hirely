@@ -67,9 +67,9 @@ function navigateToJobDetails(jobId) {
                 640: { itemsToShow: 2 },
                 768: { itemsToShow: 1 },
                 900: { itemsToShow: 3 },
-                1024: { itemsToShow: 3 },
-                1280: { itemsToShow: 3 },
-                1440: { itemsToShow: 3 },
+                1024: { itemsToShow: 4 },
+                1280: { itemsToShow: 4 },
+                1440: { itemsToShow: 4 },
             }">
                 <Slide v-for="job in jobs" :key="job._id">
                     <div class="h-full flex">
@@ -215,7 +215,6 @@ function navigateToJobDetails(jobId) {
 
 .carousel__slide .job-card {
     border-radius: 1rem;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     background-color: #fff;
     padding: 1rem;
@@ -227,7 +226,6 @@ function navigateToJobDetails(jobId) {
 
 .carousel__slide .job-card:hover {
     transform: scale(1.02);
-    box-shadow: 0 6px 24px rgba(0, 128, 0, 0.12);
     border-color: #0baa45;
 }
 
