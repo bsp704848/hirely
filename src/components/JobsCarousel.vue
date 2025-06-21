@@ -64,7 +64,7 @@ function navigateToJobDetails(jobId) {
                 640: { itemsToShow: 1 },
                 768: { itemsToShow: 2 },
                 1024: { itemsToShow: 3 },
-                1280: { itemsToShow: 4 }
+                1280: { itemsToShow: 3 }
             }">
                 <Slide v-for="job in jobs" :key="job._id">
                     <div class="h-full flex">
