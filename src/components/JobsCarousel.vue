@@ -81,13 +81,13 @@ function navigateToJobDetails(jobId) {
                                     job.company.companyName || 'Name not specified' }}</p>
                                 <p class="text-sm sm:text-base text-truncate"><font-awesome-icon icon="list"
                                         class="mr-1" /> {{
-                                    job.jobCategory || 'Category not specified' }}</p>
+                                            job.jobCategory || 'Category not specified' }}</p>
                                 <p class="text-sm sm:text-base">
                                     <font-awesome-icon icon="indian-rupee-sign" class="mr-1" />
                                     <span v-if="job.salary && typeof job.salary === 'object'">
                                         {{ job.salary.min?.toLocaleString() || 'NA' }} - {{
-                                        job.salary.max?.toLocaleString()
-                                        || 'NA' }} /month
+                                            job.salary.max?.toLocaleString()
+                                            || 'NA' }} /month
                                     </span>
                                     <span v-else>
                                         {{ job.salary || 'Salary not specified' }}
@@ -97,37 +97,47 @@ function navigateToJobDetails(jobId) {
                         </JobCard>
                     </div>
                 </Slide>
+
+                <template #addons>
+                    <Navigation>
+                        <template #next>
+                            <button aria-label="Next slide"
+                                class="carousel__next bg-green-600 hover:bg-green-700 text-white p-2 absolute right-0 top-1/2 transform -translate-y-1/2 -translate-x-4 shadow-lg">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                                    fill="currentColor">
+                                    <path fill-rule="evenodd"
+                                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        </template>
+                        <template #prev>
+                            <button aria-label="Previous slide"
+                                class="carousel__prev bg-green-600 hover:bg-green-700 text-white p-2 absolute left-0 top-1/2 transform -translate-y-1/2 translate-x-4 shadow-lg">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                                    fill="currentColor">
+                                    <path fill-rule="evenodd"
+                                        d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        </template>
+                    </Navigation>
+                </template>
             </Carousel>
 
-            <div class="flex justify-between mt-4 px-4 md:px-12">
-                <button aria-label="Previous slide" class="carousel__prev">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <div class="text-center mt-8 sm:mt-10">
+                <button @click="navigateToJobList"
+                    class="px-5 mt-8  py-2 sm:px-6 sm:py-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors duration-300 inline-flex items-center">
+                    View All Jobs
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20"
+                        fill="currentColor">
                         <path fill-rule="evenodd"
-                            d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                            clip-rule="evenodd" />
-                    </svg>
-                </button>
-                <button aria-label="Next slide" class="carousel__next">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd"
-                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                            d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
                             clip-rule="evenodd" />
                     </svg>
                 </button>
             </div>
-        </div>
-
-
-        <div class="text-center mt-8 sm:mt-10">
-            <button @click="navigateToJobList"
-                class="px-5 mt-8  py-2 sm:px-6 sm:py-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors duration-300 inline-flex items-center">
-                View All Jobs
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd"
-                        d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
-                        clip-rule="evenodd" />
-                </svg>
-            </button>
         </div>
     </div>
 </template>
