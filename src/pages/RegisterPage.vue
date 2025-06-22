@@ -11,7 +11,7 @@ const form = ref({
     email: '',
     password: '',
     confirmPassword: '',
-    role: 'employee',
+    
 })
 
 const authStore = useAuthStore()
@@ -36,7 +36,7 @@ const validatePassword = (password) => {
 }
 
 const handleSubmit = async () => {
-    if (!form.value.username || !form.value.email || !form.value.password || !form.value.confirmPassword || !form.value.role) {
+    if (!form.value.username || !form.value.email || !form.value.password || !form.value.confirmPassword) {
         errorMessage.value = 'Please fill in all fields'
         return
     }
@@ -52,13 +52,19 @@ const handleSubmit = async () => {
         errorMessage.value = 'Passwords do not match'
         return
     }
+
+    if (!selectedRole.value) {
+        errorMessage.value = 'Please select a role'
+        return
+    }
+
     errorMessage.value = '';
 
     const newUser = {
         username: form.value.username,
         email: form.value.email,
         password: form.value.password,
-        role: form.value.role,
+        role: selectedRole.value,
     };
 
     try {
@@ -138,7 +144,7 @@ const handleGoogleLogin = async (response) => {
 
                     <div class="col-span-2">
                         <label class="block text-sm font-medium mb-1">Role</label>
-                        <select v-model="form.role"
+                        <select v-model="selectedRole"
                             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
                             <option disabled value="">Select</option>
                             <option value="employee">Employee</option>
@@ -177,15 +183,6 @@ const handleGoogleLogin = async (response) => {
                     </button>
 
                     <div class="col-span-2 flex flex-col gap-4 mt-4">
-                        <div>
-                            <label class="block text-sm font-medium mb-1">Choose Role for Google Login</label>
-                            <select v-model="selectedRole"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                                <option disabled value="">Select a role</option>
-                                <option value="employee">Employee</option>
-                                <option value="employer">Employer</option>
-                            </select>
-                        </div>
 
                         <div class="flex items-center gap-2 justify-center">
                             <span class="text-sm">Or login with Google</span>

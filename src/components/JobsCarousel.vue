@@ -37,7 +37,7 @@ function navigateToJobDetails(jobId) {
 </script>
 
 <template>
-    <div class="px-4 sm:px-6 lg:px-8 py-12 ">
+    <div class="px-4 sm:px-6 lg:px-8 py-16 ">
         <div class="max-w-7xl mx-auto">
             <h1
                 class="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-16 md:mb-12 text-gray-900 dark:text-white">
@@ -59,20 +59,20 @@ function navigateToJobDetails(jobId) {
                 No current job openings available
             </div>
 
-            <Carousel :items-to-show="3" :items-to-scroll="3" :autoplay="0" :transition="500"
-                :wrap-around="false" class="w-full" :breakpoints="{
-                    320: { itemsToShow: 1, itemsToScroll: 1  },
-                    640: { itemsToShow: 1, itemsToScroll: 1},
+            <Carousel :items-to-show="3" :items-to-scroll="3" :autoplay="0" :transition="500" :wrap-around="false"
+                class="w-full" :breakpoints="{
+                    320: { itemsToShow: 1, itemsToScroll: 1 },
+                    640: { itemsToShow: 1, itemsToScroll: 1 },
                     768: { itemsToShow: 2, itemsToScroll: 2 },
-                    1024: { itemsToShow: 3, itemsToScroll: 3  },
-                    1280: { itemsToShow: 3, itemsToScroll: 3  }
+                    1024: { itemsToShow: 3, itemsToScroll: 3 },
+                    1280: { itemsToShow: 3, itemsToScroll: 3 }
                 }">
 
-                <Slide v-for="job in jobs" :key="job._id">
+                <Slide v-for="job in jobs" :key="job._id" class="carousel__slide">
                     <div class="h-full flex">
                         <JobCard @click="() => navigateToJobDetails(job._id)" :title="job.jobTitle" :id="job._id"
                             :image="job.company?.logo || defaultImage"
-                            class="h-full flex flex-col justify-between w-full min-w-[300px]  min-h-[200px] bg-white p-4 transition-transform duration-300 hover:scale-[1.02] border-r-8 border-b-8 border-transparent hover:border-r-green-500 hover:border-b-green-500">
+                            class="h-full flex flex-col justify-between w-full min-w-[300px]  min-h-[200px] bg-white p-4 transition-transform duration-300 hover:scale-[1.02] border-l-2 border-t-2 border-r-8 border-b-8 border-green-500 hover:border-r-green-700 hover:border-b-green-700 hover:border-l-green-700 hover:border-t-green-700">
 
                             <div class="flex-1">
                                 <p class=" text-sm sm:text-base">
@@ -81,15 +81,14 @@ function navigateToJobDetails(jobId) {
                                 </p>
                                 <p class="text-sm sm:text-base"><font-awesome-icon icon="list" class="mr-1" /> {{
                                     job.company.companyName || 'Name not specified' }}</p>
-                                <p class="text-sm sm:text-base"><font-awesome-icon icon="list"
-                                        class="mr-1" /> {{
+                                <p class="text-sm sm:text-base"><font-awesome-icon icon="list" class="mr-1" /> {{
                                     job.jobCategory || 'Category not specified' }}</p>
                                 <p class="text-sm sm:text-base">
                                     <font-awesome-icon icon="indian-rupee-sign" class="mr-1" />
                                     <span v-if="job.salary && typeof job.salary === 'object'">
                                         {{ job.salary.min?.toLocaleString() || 'NA' }} - {{
-                                        job.salary.max?.toLocaleString()
-                                        || 'NA' }} /month
+                                            job.salary.max?.toLocaleString()
+                                            || 'NA' }} /month
                                     </span>
                                     <span v-else>
                                         {{ job.salary || 'Salary not specified' }}
@@ -195,8 +194,10 @@ function navigateToJobDetails(jobId) {
 .carousel__slide {
     display: flex;
     justify-content: center;
-    padding: 0 4px;
+    padding: 0 2px;
     box-sizing: border-box;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
 }
 
 .job-card p {
@@ -229,4 +230,3 @@ function navigateToJobDetails(jobId) {
     color: #cbd5e1;
 }
 </style>
-
