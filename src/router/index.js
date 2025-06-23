@@ -24,7 +24,7 @@ const routes = [
   { path: '/employer', name: 'EmployerDashboard', component: EmployerDashboard, meta: { requiresAuth: true, role: 'employer' } },
   { path: '/addJob', name: 'JobForm', component: JobForm, meta: { requiresAuth: true, role: 'employer' } },
   { path: '/jobs', name: 'joblist', component: JobList },
-  { path: '/job/:id',name:JobDetails, component: JobDetails, meta: { requiresAuth: true, role: 'employee' } },
+  { path: '/job/:id',name: JobDetails, component: JobDetails, meta: { requiresAuth: true, role: 'employee' } },
   { path: '/about', component: AboutPage },
   { path: '/EmployerJobspage', component: EmployerJobsPage, meta: { requiresAuth: true, role: 'employer' } },
   { path: '/employerjob/:id', name: 'EmployerJob', component:EmployerJob , meta: { requiresAuth: true, role: 'employer' } },
