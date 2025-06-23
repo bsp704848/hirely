@@ -98,7 +98,7 @@ const handleApply = async () => {
 
 
 const handleClick = (jobId) => {
-    router.push({ name: 'JobDetails', params: { id: jobId } })
+    router.push({ component: 'JobDetails', params: { id: jobId } })
 }
 </script>
 
