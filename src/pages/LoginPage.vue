@@ -37,7 +37,6 @@ const handleLogin = async () => {
     }
     errorMessage.value = ''
     try {
-        console.log('Login form data:', form.value)
         await authStore.login(form.value);
 
         toast.success('Login successful'); 
