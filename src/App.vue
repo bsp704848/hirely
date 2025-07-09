@@ -1,6 +1,6 @@
 <script setup>
 import { useRoute, useRouter } from 'vue-router'
-import { ref, watch} from 'vue'
+import { ref, watch,onMounted} from 'vue'
 import Navbar from './components/Navbar.vue'
 import Footer from './components/Footer.vue'
 import ScrollToTop from './components/ScrollToTop.vue'
