@@ -2,15 +2,21 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import axios from 'axios'
 import socket from '../socket' 
+import { initializeSocket } from '../socket'
 
 const baseURL = import.meta.env.VITE_API_BASE_URL
 
 export const useJobStore = defineStore('jobStore', () => {
   const jobs = ref([])
+  const socketRef = ref(null)
   const selectedJob = ref(null)
   const appliedJobs = ref([]) 
   const employerApplications = ref([])
-  const isLoading = ref(false)
+  const isLoading = ref(false) 
+
+  async function initSocket() {
+    socketRef.value = await initializeSocket()
+  }
 
   async function fetchJobs(data) {
     try {
@@ -207,21 +213,24 @@ export const useJobStore = defineStore('jobStore', () => {
     }
   }
 
-  socket.on('applicationStatusUpdated', (updatedApp) => {
-  
-    const idx = employerApplications.value.findIndex(app => app._id === updatedApp._id)
-    if (idx !== -1) {
-      employerApplications.value.splice(idx, 1, updatedApp)
-    }
-    
-    const idx2 = appliedJobs.value.findIndex(app => app._id === updatedApp._id)
-    if (idx2 !== -1) {
-      appliedJobs.value.splice(idx2, 1, updatedApp)
-    }
-  })
+  if (socketRef.value) {
+    socketRef.value.on('applicationStatusUpdated', (updatedApp) => {
+      const idx = employerApplications.value.findIndex(app => app._id === updatedApp._id)
+      if (idx !== -1) {
+        employerApplications.value.splice(idx, 1, updatedApp)
+      }
+
+      const idx2 = appliedJobs.value.findIndex(app => app._id === updatedApp._id)
+      if (idx2 !== -1) {
+        appliedJobs.value.splice(idx2, 1, updatedApp)
+      }
+    })
+  }
+
 
   return {
     jobs,
+    initSocket,
     saveJob,
     selectedJob,
     setSelectedJob,

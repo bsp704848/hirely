@@ -18,9 +18,13 @@ const userStore = useUserStore()
 const jobStore = useJobStore()
 const authStore = useAuthStore()
 
-setTimeout(() => {
-  authStore.fetchUser();
-}, 1000);
+onMounted(async () => {
+  await jobStore.initSocket()
+
+  setTimeout(() => {
+    authStore.fetchUser()
+  }, 1000)
+})
 
 router.beforeEach((to, from, next) => {
   isLoading.value = true
@@ -28,7 +32,6 @@ router.beforeEach((to, from, next) => {
 })
 
 router.afterEach(() => {
-
   setTimeout(() => {
     isLoading.value = false
   }, 1500)
