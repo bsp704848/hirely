@@ -17,7 +17,6 @@ const form = ref({
 })
 
 const showPassword = ref(false)
-const errorMessage = ref('')
 const selectedRole = ref('employee')
 
 const validateEmail = (email) => {
@@ -26,31 +25,38 @@ const validateEmail = (email) => {
 }
 
 const handleLogin = async () => {
+    errors.value = { email: '', password: '' };
 
-    if (!form.value.email || !form.value.password) {
-        errorMessage.value = 'Please fill in all fields'
-        return
+    if (!form.value.email) {
+        errors.value.email = 'Please enter your email.';
+    } else if (!validateEmail(form.value.email)) {
+        errors.value.email = 'Please enter a valid email.';
     }
-    if (!validateEmail(form.value.email)) {
-        errorMessage.value = 'Please enter a valid email'
-        return
+
+    if (!form.value.password) {
+        errors.value.password = 'Please enter your password.';
+    } else if (form.value.password.length !== 8) {
+        errors.value.password = 'Password must be exactly 8 characters.';
     }
-    errorMessage.value = ''
+
+    if (errors.value.email || errors.value.password) {
+        return;
+    }
+
     try {
         await authStore.login(form.value);
-
-        toast.success('Login successful'); 
+        toast.success('Login successful');
 
         const role = authStore.role || 'employee';
         router.push(role === 'employer' ? '/employer' : '/');
 
         form.value = { email: '', password: '' };
-
     } catch (err) {
         console.error('Login error:', err.response?.data || err.message);
         toast.error(err.response?.data?.message || err.message || 'Login failed');
     }
-}
+};
+
 
 const handleGoogleLogin = async (response) => {
 
@@ -104,21 +110,16 @@ const handleGoogleLogin = async (response) => {
             <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
                 <h2 class="text-2xl font-bold mb-6 text-center">Login</h2>
                 <form @submit.prevent="handleLogin" class="space-y-5">
-                    
+
                     <div>
                         <label class="block mb-1 font-medium">Email</label>
                         <input type="email" v-model="form.email"
                             class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             placeholder="Enter your email" required />
-                        <p v-if="errorMessage === 'Please fill in all fields' && !form.email" class="text-red-500 text-xs mt-1">
-                            {{ errorMessage }}
-                        </p>
-                        <p v-else-if="errorMessage === 'Please enter a valid email' && form.email" class="text-red-500 text-xs mt-1">
-                            {{ errorMessage }}
-                        </p>
+                        <p v-if="errors.email" class="text-red-500 text-xs mt-1">{{ errors.email }}</p>
                     </div>
-                    
-                    
+
+
                     <div class="relative">
                         <label class="block mb-1 font-medium">Password</label>
                         <input :type="showPassword ? 'text' : 'password'" v-model="form.password"
@@ -127,12 +128,9 @@ const handleGoogleLogin = async (response) => {
                         <i :class="`pi ${showPassword ? 'pi-eye-slash' : 'pi-eye'}`"
                             class="absolute right-5 top-10 text-gray-500 cursor-pointer"
                             @click="showPassword = !showPassword"></i>
-                        <p v-if="errorMessage === 'Please fill in all fields' && !form.password" class="text-red-500 text-xs mt-1">
-                            {{ errorMessage }}
-                        </p>
+                        <p v-if="errors.password" class="text-red-500 text-xs mt-1">{{ errors.password }}</p>
                     </div>
-                    <p v-if="errorMessage && errorMessage !== 'Please fill in all fields' && errorMessage !== 'Please enter a valid email'" class="text-red-500 text-center text-sm">{{ errorMessage }}</p>
-
+                  
                     <p class="text-center text-sm">
                         New to Hirely?
                         <router-link to="/register" class="text-green-500 font-semibold">
