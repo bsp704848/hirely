@@ -110,8 +110,11 @@ const handleGoogleLogin = async (response) => {
                         <input type="email" v-model="form.email"
                             class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             placeholder="Enter your email" required />
-                        <p v-if="errorMessage && (!form.value.email || !validateEmail(form.value.email))" class="text-red-500 text-xs mt-1">
-                            {{ errorMessage === 'Please fill in all fields' || errorMessage === 'Please enter a valid email' ? errorMessage : '' }}
+                        <p v-if="errorMessage === 'Please fill in all fields' && !form.email" class="text-red-500 text-xs mt-1">
+                            {{ errorMessage }}
+                        </p>
+                        <p v-else-if="errorMessage === 'Please enter a valid email' && form.email" class="text-red-500 text-xs mt-1">
+                            {{ errorMessage }}
                         </p>
                     </div>
                     
@@ -124,8 +127,8 @@ const handleGoogleLogin = async (response) => {
                         <i :class="`pi ${showPassword ? 'pi-eye-slash' : 'pi-eye'}`"
                             class="absolute right-5 top-10 text-gray-500 cursor-pointer"
                             @click="showPassword = !showPassword"></i>
-                        <p v-if="errorMessage && (form.value.email && (!form.value.password || (form.value.password && validateEmail(form.value.email)))) && errorMessage !== 'Please enter a valid email'" class="text-red-500 text-xs mt-1">
-                            {{ errorMessage === 'Please fill in all fields' ? errorMessage : '' }}
+                        <p v-if="errorMessage === 'Please fill in all fields' && !form.password" class="text-red-500 text-xs mt-1">
+                            {{ errorMessage }}
                         </p>
                     </div>
                     <p v-if="errorMessage && errorMessage !== 'Please fill in all fields' && errorMessage !== 'Please enter a valid email'" class="text-red-500 text-center text-sm">{{ errorMessage }}</p>
