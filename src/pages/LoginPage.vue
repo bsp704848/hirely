@@ -16,6 +16,11 @@ const form = ref({
     password: '',
 })
 
+const errors = ref({
+    email: '',
+    password: '',
+});
+
 const showPassword = ref(false)
 const selectedRole = ref('employee')
 
