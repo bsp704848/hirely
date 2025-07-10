@@ -108,21 +108,27 @@ const handleGoogleLogin = async (response) => {
                     <div>
                         <label class="block mb-1 font-medium">Email</label>
                         <input type="email" v-model="form.email"
-                        class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Enter your email" required />
+                            class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Enter your email" required />
+                        <p v-if="errorMessage && (!form.value.email || !validateEmail(form.value.email))" class="text-red-500 text-xs mt-1">
+                            {{ errorMessage === 'Please fill in all fields' || errorMessage === 'Please enter a valid email' ? errorMessage : '' }}
+                        </p>
                     </div>
                     
                     
                     <div class="relative">
                         <label class="block mb-1 font-medium">Password</label>
                         <input :type="showPassword ? 'text' : 'password'" v-model="form.password"
-                        class="w-full border border-gray-300 rounded-lg px-4 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Enter your password" required :minlength="8" :maxlength="8" />
+                            class="w-full border border-gray-300 rounded-lg px-4 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Enter your password" required :minlength="8" :maxlength="8" />
                         <i :class="`pi ${showPassword ? 'pi-eye-slash' : 'pi-eye'}`"
-                        class="absolute right-5 top-10 text-gray-500 cursor-pointer"
-                        @click="showPassword = !showPassword"></i>
+                            class="absolute right-5 top-10 text-gray-500 cursor-pointer"
+                            @click="showPassword = !showPassword"></i>
+                        <p v-if="errorMessage && (form.value.email && (!form.value.password || (form.value.password && validateEmail(form.value.email)))) && errorMessage !== 'Please enter a valid email'" class="text-red-500 text-xs mt-1">
+                            {{ errorMessage === 'Please fill in all fields' ? errorMessage : '' }}
+                        </p>
                     </div>
-                    <p v-if="errorMessage" class="text-red-500 text-center text-sm">{{ errorMessage }}</p>
+                    <p v-if="errorMessage && errorMessage !== 'Please fill in all fields' && errorMessage !== 'Please enter a valid email'" class="text-red-500 text-center text-sm">{{ errorMessage }}</p>
 
                     <p class="text-center text-sm">
                         New to Hirely?
