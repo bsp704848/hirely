@@ -156,7 +156,7 @@ const handleGoogleLogin = async (response) => {
                         <label class="block text-sm font-medium mb-1">Password</label>
                         <input :type="showPassword ? 'text' : 'password'" v-model="form.password" required
                             class="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                            placeholder="Password" />
+                            placeholder="Password" maxlength="8" />
                         <i :class="`pi ${showPassword ? 'pi-eye-slash' : 'pi-eye'}`"
                             class="absolute right-3 top-10 text-gray-500 cursor-pointer"
                             @click="showPassword = !showPassword"></i>
@@ -166,7 +166,7 @@ const handleGoogleLogin = async (response) => {
                         <label class="block text-sm font-medium mb-1">Confirm Password</label>
                         <input :type="showConfirmPassword ? 'text' : 'password'" v-model="form.confirmPassword" required
                             class="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                            placeholder="Confirm Password" />
+                            placeholder="Confirm Password" maxlength="8" />
                         <i :class="`pi ${showConfirmPassword ? 'pi-eye-slash' : 'pi-eye'}`"
                             class="absolute right-3 top-10 text-gray-500 cursor-pointer"
                             @click="showConfirmPassword = !showConfirmPassword"></i>

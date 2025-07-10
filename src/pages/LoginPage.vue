@@ -118,7 +118,7 @@ const handleGoogleLogin = async (response) => {
                         <label class="block mb-1 font-medium">Password</label>
                         <input :type="showPassword ? 'text' : 'password'" v-model="form.password"
                             class="w-full border border-gray-300 rounded-lg px-4 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Enter your password" required />
+                            placeholder="Enter your password" required maxlength="8" />
                         <i :class="`pi ${showPassword ? 'pi-eye-slash' : 'pi-eye'}`"
                             class="absolute right-5 top-10 text-gray-500 cursor-pointer"
                             @click="showPassword = !showPassword"></i>
