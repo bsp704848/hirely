@@ -139,51 +139,77 @@ const isActive = (path) => {
             </div>
         </div>
 
-        <div v-if="isMenuOpen" class="md:hidden mt-4 px-4 space-y-4 text-base font-medium">
-            <RouterLink :to="isEmployer ? '/employer' : '/'" class="block p-2 rounded-lg border border-green-200 bg-green-50 text-green-800 font-semibold shadow transition-all duration-200
+        <transition name="slide">
+            <div v-if="isMenuOpen" class="md:hidden fixed inset-0 z-50 flex justify-end text-base font-medium">
+                <div @click="isMenuOpen = false" class="fixed inset-0 bg-black opacity-40"></div>
+
+                <div class="relative w-64 bg-white h-full shadow-lg p-6 space-y-4 overflow-y-auto">
+                    <RouterLink :to="isEmployer ? '/employer' : '/'" class="block p-2 rounded-lg border border-green-200 bg-green-50 text-green-800 font-semibold shadow transition-all duration-200
                     hover:bg-green-300 hover:text-green-900 hover:scale-105" @click="isMenuOpen = false">Home
-            </RouterLink>
-            <RouterLink :to="isEmployer ? '/EmployerJobspage' : '/jobs'" class="block p-2 rounded-lg border border-green-200 bg-green-50 text-green-800 font-semibold shadow transition-all duration-200
+                    </RouterLink>
+                    <RouterLink :to="isEmployer ? '/EmployerJobspage' : '/jobs'" class="block p-2 rounded-lg border border-green-200 bg-green-50 text-green-800 font-semibold shadow transition-all duration-200
                     hover:bg-green-300 hover:text-green-900 hover:scale-105" @click="isMenuOpen = false">Jobs
-            </RouterLink>
+                    </RouterLink>
 
-            <RouterLink v-if="authStore.role === 'employer' && route.path !== '/applications'" to="/applications" class="block p-2 rounded-lg border border-green-200 bg-green-50 text-green-800 font-semibold shadow transition-all duration-200
+                    <RouterLink v-if="authStore.role === 'employer' && route.path !== '/applications'"
+                        to="/applications" class="block p-2 rounded-lg border border-green-200 bg-green-50 text-green-800 font-semibold shadow transition-all duration-200
                 hover:bg-green-300 hover:text-green-900 hover:scale-105" @click="isMenuOpen = false">
-                Applications
-            </RouterLink>
+                        Applications
+                    </RouterLink>
 
-            <RouterLink v-if="authStore.role === 'employee'" to="/applied-jobs" class="block p-2 rounded-lg border border-green-200 bg-green-50 text-green-800 font-semibold shadow transition-all duration-200
+                    <RouterLink v-if="authStore.role === 'employee'" to="/applied-jobs" class="block p-2 rounded-lg border border-green-200 bg-green-50 text-green-800 font-semibold shadow transition-all duration-200
                     hover:bg-green-300 hover:text-green-900 hover:scale-105" @click="isMenuOpen = false">Applied Jobs
-            </RouterLink>
+                    </RouterLink>
 
-            <RouterLink v-if="authStore.role === 'employer'" to="/addjob" class="block p-2 rounded-lg border border-green-200 bg-green-50 text-green-800 font-semibold shadow transition-all duration-200
+                    <RouterLink v-if="authStore.role === 'employer'" to="/addjob" class="block p-2 rounded-lg border border-green-200 bg-green-50 text-green-800 font-semibold shadow transition-all duration-200
                     hover:bg-green-300 hover:text-green-900 hover:scale-105" @click="isMenuOpen = false">Post Job
-            </RouterLink>
+                    </RouterLink>
 
-            <template v-if="authStore.isLoggedIn">
-                <div class="relative">
-                    <span @click="toggleDropdown" class="block w-full p-2 cursor-pointer text-gray-700 font-semibold rounded-lg border border-green-200 bg-green-50 shadow
+                    <template v-if="authStore.isLoggedIn">
+                        <div class="relative">
+                            <span @click="toggleDropdown" class="block w-full p-2 cursor-pointer text-gray-700 font-semibold rounded-lg border border-green-200 bg-green-50 shadow
                             hover:text-green-900 hover:bg-green-300 transition-all duration-200">
-                        Hello, {{ authStore.username }}
-                    </span>
-                    <div v-if="showDropdown" class="absolute mt-2 bg-white border rounded shadow p-2 text-sm z-50 w-40">
-                        <p class="text-gray-600">Role : <span class="font-medium text-green-500 capitalize">{{
-                                authStore.role }}</span></p>
-                        <button @click="logout" class="text-red-600 hover:underline mt-2">Logout</button>
-                    </div>
-                </div>
-                <RouterLink to="/about" class="block p-2 rounded-lg border border-green-200 bg-green-50 text-green-800 font-semibold shadow transition-all duration-200
+                                Hello, {{ authStore.username }}
+                            </span>
+                            <div v-if="showDropdown"
+                                class="absolute mt-2 bg-white border rounded shadow p-2 text-sm z-50 w-40">
+                                <p class="text-gray-600">Role : <span class="font-medium text-green-500 capitalize">{{
+                                        authStore.role }}</span></p>
+                                <button @click="logout" class="text-red-600 hover:underline mt-2">Logout</button>
+                            </div>
+                        </div>
+                        <RouterLink to="/about" class="block p-2 rounded-lg border border-green-200 bg-green-50 text-green-800 font-semibold shadow transition-all duration-200
                         hover:bg-green-300 hover:text-green-900 hover:scale-105" @click="isMenuOpen = false">About
-                </RouterLink>
-            </template>
-            <template v-else>
-                <RouterLink to="/login" class="block p-2 rounded-lg border border-green-200 bg-white text-green-600 font-semibold shadow transition-all duration-200
+                        </RouterLink>
+                    </template>
+                    <template v-else>
+                        <RouterLink to="/login" class="block p-2 rounded-lg border border-green-200 bg-white text-green-600 font-semibold shadow transition-all duration-200
                         hover:bg-green-300 hover:text-green-900 hover:scale-105" @click="isMenuOpen = false">Login
-                </RouterLink>
-                <RouterLink to="/register" class="block p-2 rounded-lg border border-green-200 bg-white text-green-600 font-semibold shadow transition-all duration-200
+                        </RouterLink>
+                        <RouterLink to="/register" class="block p-2 rounded-lg border border-green-200 bg-white text-green-600 font-semibold shadow transition-all duration-200
                         hover:bg-green-300 hover:text-green-900 hover:scale-105" @click="isMenuOpen = false">Register
-                </RouterLink>
-            </template>
-        </div>
+                        </RouterLink>
+                    </template>
+                </div>
+            </div>
+        </transition>
+
     </nav>
-</template>
+</template> 
+
+<style scoped>
+.slide-enter-active,
+.slide-leave-active {
+    transition: transform 0.3s ease;
+}
+
+.slide-enter-from,
+.slide-leave-to {
+    transform: translateX(100%);
+}
+
+.slide-enter-to,
+.slide-leave-from {
+    transform: translateX(0%);
+}
+</style>
